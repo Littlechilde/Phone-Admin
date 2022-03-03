@@ -1,13 +1,17 @@
 # Vue 3 + Vite
 
-vue3
-vuex 4.x
-axios
-ant vue design@3.0.0beta
-vue-router
-mock.js
+- vue3.2
+- vuex 4.x
+- axios
+- ant vue design@3.0.0beta
+- vue-router
+- mock.js
+vite-plugin-mock
+- NProgress
+- vite 2
+- iconfont
 
-菜单权限；
+- 菜单权限；
 layout布局;
 
 项目下载和运行
