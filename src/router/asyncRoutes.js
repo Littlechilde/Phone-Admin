@@ -1,5 +1,4 @@
 
-// const layoutView = () => import('@/layout/defaultRouter.vue');
 //动态加载路由
 export const asyncRoutes = [
   {
@@ -7,7 +6,7 @@ export const asyncRoutes = [
     name: 'Dashboard',
     component: () => import('@/views/dashboard/index.vue'),
     meta: {
-      title: 'dashboard', // 名称
+      title: '首页', // 名称
       auth: ['admin', 'user'], // 权限
       icon: 'icon-dashboard',
     },
@@ -17,8 +16,8 @@ export const asyncRoutes = [
     path: "/index",
     name: "Index",
     meta: {
-      title: "系统管理",
-      icon: "icon-setting",
+      title: "话单管理",
+      icon: "icon-mobile",
       auth: ['admin', 'user'], // 权限
     },
     component: () => import('@/layout/defaultRouter.vue'),
@@ -26,26 +25,27 @@ export const asyncRoutes = [
         path: "/system",
         name: "user",
         meta: {
-          title: "用户管理",
+          title: "明细话单",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/system/role.vue"),
+      },
+      {
+        path: "/home",
+        name: "role",
+        meta: {
+          title: "号码资源管理",
           auth: ['admin', 'user'],
         },
         component: () => import("@/views/others.vue"),
-      },
-      {
-        path: "/role",
-        name: "role",
-        meta: {
-          title: "角色管理",
-          auth: ['admin', 'user'],
-        },
-        component: () => import("@/views/system/role.vue")
       }
     ]
   },
-  //三级菜单
+  //三级菜单测试
   {
     path: '/area',
     name: 'area',
+    hidden: true,
     meta: {
       title: '首页',
       icon: 'icon-USB',
@@ -65,7 +65,7 @@ export const asyncRoutes = [
           name: "404-1",
           meta: {
             title: "404子",
-            auth: ['admin', 'user'],
+            auth: ['user'],
           },
           component: () => import("@/views/errorPages/404-1/404-1.vue"),
         },
@@ -79,25 +79,47 @@ export const asyncRoutes = [
           component: () => import("@/views/errorPages/404-1/404-2.vue"),
         },
       ]
-    }, {
-      path: '/home',
-      name: 'home',
-      meta: {
-        title: "其他",
-        icon: 'icon-folder',
-        auth: ['admin', 'user'],
-      },
-      component: () => import('@/views/home.vue'),
     }]
   },
   {
-    path: '/500',
-    name: '500',
-    component: () => import('@/views/errorPages/500.vue'),
+    path: '/phoneType',
+    name: 'orderType',
+    component: () => import('@/views/phoneOrderType/type.vue'),
     meta: {
-      title: '500', // 名称
-      auth: ['user'], // 权限
-      icon: 'icon-cloud-download',
+      title: '话单类型管理', // 名称
+      auth: ['admin','user'], // 权限
+      icon: 'icon-file-text',
     },
+  },
+  /**错误页 */
+  {
+    path: '/403',
+    name: 'errorTags',
+    hidden:false,
+    component: () => import('@/layout/defaultRouter.vue'),
+    meta: {
+      title: '错误页', // 名称
+      auth: ['admin','user'], // 权限
+      icon: 'icon-disconnect',
+    },
+    children: [{
+      path: "/403noPower",
+      name: "noPower",
+      meta: {
+        title: "403",
+        auth: ['admin', 'user'],
+      },
+      component: () => import("@/views/errorPages/403.vue"),
+    },
+    {
+      path: "/500noServe",
+      name: "noServe",
+      meta: {
+        title: "500",
+        auth: ['admin', 'user'],
+      },
+      component: () => import("@/views/errorPages/500noServe.vue"),
+    }
+  ]
   },
 ]

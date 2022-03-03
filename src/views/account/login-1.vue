@@ -86,12 +86,10 @@ export default defineComponent({
       // const { username, username } = state.form;
       // if (username.trim() == "" || password.trim() == "")
       //   return message.warning("用户名和密码不能为空");
-        // mockTest()
       //store-->登录
-      const res= await getArea({});
-      // const res = await store.dispatch("user/LoginResult", state.form);
+      // const res= await getArea({});
+      const res = await store.dispatch("user/LoginResult", state.form);
       console.log(res,'res')
-      return
       if (res.code == 200) {
         const toPath = decodeURIComponent(route.query?.redirect || "/"); //获取登录成功后要跳转的路由。
         message.success("登录成功！");

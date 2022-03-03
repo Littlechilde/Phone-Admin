@@ -15,7 +15,6 @@ router.beforeEach(async (to, from, next) => {
   } else if (token) {
     //  正常跳转 ，已生成路由
     if (menuList.length) {
-      console.log('to123')
       next();
     } else {
       //  生成路由在跳转

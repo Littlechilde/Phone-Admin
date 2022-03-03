@@ -43,7 +43,7 @@
 
          <BreadCrumb />
         <!-- content -->
-        <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', minHeight: '280px' }">
+        <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', height:'auto' }">
              <router-view/>
         </a-layout-content>
       </a-layout>
@@ -101,6 +101,8 @@ export default defineComponent({
   display: grid;
   grid-template-columns: auto 1fr;
   padding-right: 16px;
+  box-shadow: 0 1px 4px rgb(0 21 41 / 8%);
+  z-index:100;
 }
 .down {
   justify-self: end;
@@ -118,5 +120,8 @@ export default defineComponent({
 }
 .user:hover {
   background: rgba(0, 0, 0, 0.025);
+}
+.ant-layout-content{
+  flex:none;
 }
 </style>

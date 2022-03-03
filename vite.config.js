@@ -33,8 +33,8 @@ export default defineConfig({
     preprocessorOptions: {
       less: {
         modifyVars: {
-          'primary-color': '#F5222D',
-          'link-color': 'red',
+          'primary-color': '#FA541C',
+          'link-color': '#FA541C'
         },
         javascriptEnabled: true,
       }

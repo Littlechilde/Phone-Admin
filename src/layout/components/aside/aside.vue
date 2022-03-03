@@ -40,8 +40,7 @@ export default {
     const router = useRouter();
     const store = useStore();
     const menuList = computed(()=> store.state.auth.menuList);
-    // const routers = routes;
-    // console.log("routers", routers)
+    console.log("router", router)
 
     // 检测是否只有一个子路由
     const hasOnlyChildren = (res) => {
@@ -64,10 +63,12 @@ export default {
     }
     //路由跳转
     const clickMenuItem = (name)=>{
+      //确认是否存在指定名称的路由
+      if(router.hasRoute(name))
       router.push({name})
+      else router.push({name: "noPower"})
     };
     return {
-      // routers,
       menuList,
       hasOnlyChildren,
       ...toRefs(getMenu),

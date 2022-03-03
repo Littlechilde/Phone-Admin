@@ -29,3 +29,9 @@ watch(
 )
   console.log("object", route.matched)
 </script>
+<style lang="less" scoped>
+.flex-center {
+  background-color: #fff;
+  padding:12px 24px;
+}
+</style>

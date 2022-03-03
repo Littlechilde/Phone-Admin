@@ -15,9 +15,12 @@ Mock.mock(
   ({body}) => {
     const { password, username } = JSON.parse(body)
     if (username === 'admin' && password === '123456') {
-        return {
+      console.log(123)
+      return {
           code : 200,
-          token:'admin-token'
+          data:{
+            token:'admin'
+          }
         }
       } else if(username === 'editor' && password === '123456') {
         return {
