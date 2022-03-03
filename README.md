@@ -1,4 +1,4 @@
-# Vue 3 + Vite
+# Vue 3 + Vite + axios + mock +vuex + vue-router
 
 - vue3.2
 - vuex 4.x
@@ -10,6 +10,7 @@ vite-plugin-mock
 - NProgress
 - vite 2
 - iconfont
+less支持
 
 - 菜单权限；
 layout布局;
