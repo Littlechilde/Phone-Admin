@@ -15,8 +15,8 @@ layout布局;
 
 - 拉取项目代码
 ```bash
-git clone https://github.com/vueComponent/ant-design-vue-pro.git
-cd ant-design-vue-pro
+git clone
+cd
 ```
 
 - 安装依赖
@@ -26,7 +26,7 @@ yarn install
 
 - 开发模式运行
 ```
-yarn run serve
+yarn run dev
 ```
 
 - 编译项目
