@@ -18,8 +18,8 @@
 </template>
 
 <script>
-import { reactive, toRefs,computed } from 'vue';
-import { useRouter } from "vue-router";
+import { reactive, toRefs,computed,watch,ref } from 'vue';
+import { useRouter,useRoute } from "vue-router";
 import {useStore} from "vuex"
 import Menu from "./subMenu.vue";
 import { SettingOutlined } from '@ant-design/icons-vue';
@@ -36,11 +36,18 @@ export default {
   },
   setup () {
     // 路由
-    const {options:{routes}}=useRouter();
     const router = useRouter();
+    const route = useRoute();
     const store = useStore();
     const menuList = computed(()=> store.state.auth.menuList);
-    console.log("router", router)
+    const getMenu =reactive({
+       openKeys: localStorage.getItem("openKeys") ? JSON.parse(localStorage.getItem("openKeys")): [],
+    });
+    //检测路由变化的菜单选择
+    let selectedKeys = ref([]);
+    watch(() => route.path,() => {
+        selectedKeys.value = [route.path]
+      }, { immediate: true,});
 
     // 检测是否只有一个子路由
     const hasOnlyChildren = (res) => {
@@ -48,15 +55,11 @@ export default {
         if(!res.children) { return true; }
         return false;
     };
-    const getMenu =reactive({
-       selectedKeys: localStorage.getItem("selectedKeys") ? [localStorage.getItem("selectedKeys")] : [menuList.value[0].path],
-       openKeys: localStorage.getItem("openKeys") ? JSON.parse(localStorage.getItem("openKeys")): [],
-    });
     //菜单选中事件
-    const selectMenu=({item,key,keyPath})=>{
-        getMenu.selectedKeys = [key];
-        localStorage.setItem("selectedKeys",key);
+    const selectMenu=({key})=>{
+        console.log(key)
     };
+    //菜单折叠事件
     const openChange=(openKeys)=>{
       getMenu.openKeys = openKeys;
       localStorage.setItem("openKeys", JSON.stringify(openKeys)); // 设置
@@ -70,6 +73,7 @@ export default {
     };
     return {
       menuList,
+      selectedKeys,
       hasOnlyChildren,
       ...toRefs(getMenu),
       selectMenu,

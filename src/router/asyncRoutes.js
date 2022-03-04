@@ -3,7 +3,7 @@
 export const asyncRoutes = [
   {
     path: '/dashboard',
-    name: 'Dashboard',
+    name: 'dashboard',
     component: () => import('@/views/dashboard/index.vue'),
     meta: {
       title: '首页', // 名称
@@ -13,8 +13,9 @@ export const asyncRoutes = [
   },
   // 管理后台 
   {
-    path: "/index",
-    name: "Index",
+    path: "/orderIndex",
+    name: "orderIndex",
+    redirect: {path:'/system'},
     meta: {
       title: "话单管理",
       icon: "icon-mobile",
@@ -45,9 +46,9 @@ export const asyncRoutes = [
   {
     path: '/area',
     name: 'area',
-    hidden: true,
+    hidden: false,
     meta: {
-      title: '首页',
+      title: '三级菜单测试页',
       icon: 'icon-USB',
       auth: ['admin', 'user'],
     },

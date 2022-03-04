@@ -14,20 +14,21 @@
 </template>
 <script setup>
 import { ref, watch } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute,useRouter } from 'vue-router';
 
-const route = useRoute()
+const routeNav = useRoute();
+const router = useRouter();
+
 let matchedRoute = ref([])
 watch(
-  () => route.matched,
+  () => routeNav.matched,
   () => {
-    matchedRoute.value = route.matched
+    matchedRoute.value = routeNav.matched.slice(1)
   },
   {
     immediate: true,
   }
 )
-  console.log("object", route.matched)
 </script>
 <style lang="less" scoped>
 .flex-center {

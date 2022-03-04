@@ -3,8 +3,8 @@ import { message } from 'ant-design-vue';
 
 // let url = window.location.origin
 const service = axios.create({
-  baseURL:'http://120.77.237.25:8080/',
   // baseURL:url,
+  baseURL:'http://120.77.237.25:8080/',
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 15000,
   headers: {'content-type': 'application/json'}
@@ -15,7 +15,7 @@ service.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
     if (token) {
-      config.headers['X-AUTH-TOKEN'] = token;
+      // config.headers['X-AUTH-TOKEN'] = token;
     }
     return config
   },

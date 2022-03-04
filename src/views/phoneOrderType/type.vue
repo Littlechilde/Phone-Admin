@@ -8,30 +8,31 @@
       </a-col>
     </a-row>
     <!-- table开始 -->
-    <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :columns="columns" :data-source="data">
-      <!-- v-slot:bodyCell="{text, record, index, column}" 个性化单元格-->
-      <template #bodyCell="{ column, text,record }">
-        <template v-if="column.dataIndex === 'name'">
-          <a>{{ text }}</a>
+    <a-spin :spinning="spinning" tip="Loading...">
+      <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :columns="columns" :data-source="data">
+        <!-- v-slot:bodyCell="{text, record, index, column}" 个性化单元格-->
+        <template #bodyCell="{ column, text,record }">
+          <template v-if="column.dataIndex === 'name'">
+            <a>{{ text }}</a>
+          </template>
+          <template v-else-if="column.key === 'action'">
+          <span>
+            <a @click="edit">编辑</a>
+            <a-divider type="vertical" />
+            <!-- 操作气泡框 -->
+            <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel" @cancel="cancelDel">
+              <a href="javascript:;" style="color:#f5222d">删除</a>
+            </a-popconfirm>
+            <a-divider type="vertical" />
+            <a class="ant-dropdown-link">
+              更多操作
+              <down-outlined />
+            </a>
+          </span>
         </template>
-        <template v-else-if="column.key === 'action'">
-        <span>
-          <a @click="edit">编辑</a>
-          <a-divider type="vertical" />
-          <!-- 操作气泡框 -->
-          <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel" @cancel="cancelDel">
-            <a href="javascript:;" style="color:#f5222d">删除</a>
-          </a-popconfirm>
-          <a-divider type="vertical" />
-          <a class="ant-dropdown-link">
-            更多操作
-            <down-outlined />
-          </a>
-        </span>
-      </template>
-      </template>
-    </a-table>
-
+        </template>
+      </a-table>
+    </a-spin>
     <!-- model开始 -->
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
@@ -47,9 +48,11 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs} from 'vue';
+import { defineComponent, ref, reactive, toRefs,onMounted} from 'vue';
 import { DownOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+
+import {getCallType} from '@/api/api';
 const formItemLayout = {
     labelCol: {
       span: 4,
@@ -60,17 +63,17 @@ const formItemLayout = {
 };
 const columns = [{
   title: '序号',
-  dataIndex: 'name',
-  key: 'name',
+  dataIndex: 'number',
+  key: 'number',
   width: 100
 }, {
   title: '类型名称',
-  dataIndex: 'age',
-  key: 'age',
+  dataIndex: 'type',
+  key: 'type',
 }, {
   title: '描述',
-  dataIndex: 'address',
-  key: 'address 1',
+  dataIndex: 'mark',
+  key: 'mark',
   ellipsis: true,
 },
  {
@@ -78,25 +81,7 @@ const columns = [{
   key: 'action',
 }
 ];
-const data = [{
-  key: '1',
-  name: '1',
-  age: '市话',
-  address: '',
-  tags: ['nice', 'developer'],
-}, {
-  key: '2',
-  name: '2',
-  age: '国际长途',
-  address: '',
-  tags: ['loser'],
-}, {
-  key: '3',
-  name: '3',
-  age: '市话',
-  address: '',
-  tags: ['cool', 'teacher'],
-}];
+
 export default defineComponent({
   components: {
     DownOutlined,
@@ -107,7 +92,9 @@ export default defineComponent({
     const confirmLoading = ref(false);
     const state = reactive({
       selectedRowKeys: [],
-      title:'新增类型'
+      title:'新增类型',
+      spinning:true,
+      data:[]
     });
     const formState = reactive({
       callType: '',
@@ -162,9 +149,19 @@ export default defineComponent({
       message.error('Click on No');
     };
 
+    async function queryType() {
+      if(!state.spinning)
+      state.spinning = true;
+      const {data} = await getCallType({});
+      state.data = data;
+      state.spinning =false;
+    }
+    onMounted(async ()=>{
+      console.log('---onMounted---');
+      await queryType();
+    });
     return {
       ...toRefs(state),
-      data,
       columns,
       formItemLayout,
       visible,

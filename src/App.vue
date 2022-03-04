@@ -8,7 +8,6 @@ export default {
   components:{HelloWorld},
   setup(){
    const store = useStore();
-   console.log(store,123)
    const test =computed(()=>store.state.auth.test)
    return {
      test
@@ -39,4 +38,5 @@ export default {
 //     color:gold;
 //   }
 // }
+// #nprogress .bar { background: #fa541c !important;}
 </style>

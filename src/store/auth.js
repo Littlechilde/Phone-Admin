@@ -4,7 +4,7 @@ import router, { constantRoutes, asyncRoutes } from '../router';
 const state = {
   auth: localStorage.getItem('token') || '',
   menuList: [],
-  test:"test12"
+  // selectedKeys:[localStorage.getItem('selectedKeys')]
 };
 //响应组件中操作
 const actions = {};
@@ -20,6 +20,11 @@ const mutations = {
     constantRoutes.forEach((r) => router.addRoute(r));
     console.log(constantRoutes,'router')
   },
+  /**面包屑、记住aside栏点击事件 key，跟随menulist*/
+  /*async ASIDE_KEY(state,key){
+    state.selectedKeys=[key];
+    localStorage.setItem("selectedKeys",key);
+  }*/
 }
 //当state中的数据需要经过加工后再使用时，可以使用getters加工
 const getters = {

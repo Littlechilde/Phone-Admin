@@ -95,7 +95,7 @@ export default defineComponent({
         message.success("登录成功！");
         /* 获取用户信息 */
         let auth = localStorage.getItem("token");
-        store.commit('auth/GENERATE_ROUTES', auth);
+        await store.commit('auth/GENERATE_ROUTES', auth);
         // const result = await store.dispatch("user/GetInfo", auth);
         router.replace(toPath).then(() => {
           if (route.name == "login") {

@@ -6,11 +6,11 @@
     "dev": "vite",
     "build": "vite build",
     "dev:mock": "cross-env USE_MOCK=true vite",
-    "build:mock":"cross-env USE_CHUNK_MOCK=true vite build",
+    "build:mock": "cross-env USE_CHUNK_MOCK=true vite build",
     "preview": "vite preview"
   },
   "dependencies": {
-    "ant-design-vue": "^3.0.0-beta.10",
+    "ant-design-vue": "^3.0.0-beta.12",
     "axios": "^0.26.0",
     "less": "^4.1.2",
     "mockjs": "^1.1.0",

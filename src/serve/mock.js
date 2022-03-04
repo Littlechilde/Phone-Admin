@@ -4,7 +4,8 @@ const baseURL = 'http://120.77.237.25:8080';
 const systemApi = {
   login: baseURL + "/user/login",
   role: baseURL + '/getRole',
-  area: baseURL + '/area/getArea'
+  area: baseURL + '/area/getArea',
+  callType:baseURL + '/callType',
 };
 
 // /* login */Mock.mock(rurl?, rtype?, template|function(options))
@@ -15,7 +16,6 @@ Mock.mock(
   ({body}) => {
     const { password, username } = JSON.parse(body)
     if (username === 'admin' && password === '123456') {
-      console.log(123)
       return {
           code : 200,
           data:{
@@ -47,8 +47,37 @@ Mock.mock(
   }
 )
 
+Mock.mock(
+  systemApi.callType,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        type: '市话',
+        mark: 32,
+        address: 'New York No. 1 Lake Park',
+        tags: ['nice', 'developer'],
+      }, {
+        number: '2',
+        type: '长途',
+        mark: 42,
+        address: 'London No. 1 Lake Park',
+        tags: ['loser'],
+      }, {
+        number: '3',
+        type: '长途',
+        mark: 32,
+        address: 'Sidney No. 1 Lake Park',
+        tags: ['cool', 'teacher'],
+      }]
+    }
+  }
+)
+
 // Mock.setup(settings)
 // 配置拦截 ajax 请求时的行为，支持的配置项有 ： tiimeout
 Mock.setup({
-	timeout: 400
+	timeout: 1000
 })

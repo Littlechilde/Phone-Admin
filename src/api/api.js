@@ -3,7 +3,8 @@ import request from '@/utils/request';
 const systemApi ={
     login:"user/login",
     role:'/getRole',
-    area:'/area/getArea'
+    area:'/area/getArea',
+    callType:'/callType'
 };
 //登录（mock）
 export function Login(data) {
@@ -25,6 +26,14 @@ export function UserInfo(data) {
 export function getArea(data) {
   return request({
     url:systemApi.area,
+    method: 'get',
+    params: data
+  })
+};
+//获取类型
+export function getCallType(data) {
+  return request({
+    url:systemApi.callType,
     method: 'get',
     params: data
   })
