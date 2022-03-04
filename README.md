@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Vue 3 + Vite + axios + mock +vuex + vue-router
 
 - vue3.2
@@ -14,14 +15,29 @@ less支持
 
 - 菜单权限；
 layout布局;
+=======
+# Vue 3 + Vite
 
-项目下载和运行
+vue3
+vuex 4.x
+axios
+ant vue design@3.0.0beta
+vue-router
+mock.js
+
+菜单权限；
+layout布局
+>>>>>>> c2dd3369c4f6c0ab9d0ba16b4e70c3c6183ed113
+
+语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html
+
+目下载和运行
 ----
 
 - 拉取项目代码
 ```bash
-git clone https://github.com/vueComponent/ant-design-vue-pro.git
-cd ant-design-vue-pro
+git clone
+cd
 ```
 
 - 安装依赖
@@ -31,7 +47,7 @@ yarn install
 
 - 开发模式运行
 ```
-yarn run serve
+yarn run dev
 ```
 
 - 编译项目
