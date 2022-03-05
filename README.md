@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 # Vue 3 + Vite + axios + mock +vuex + vue-router
 
 - vue3.2
@@ -15,7 +14,7 @@ less支持
 
 - 菜单权限；
 layout布局;
-=======
+
 # Vue 3 + Vite
 
 vue3
@@ -27,7 +26,7 @@ mock.js
 
 菜单权限；
 layout布局
->>>>>>> c2dd3369c4f6c0ab9d0ba16b4e70c3c6183ed113
+
 
 语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html
 
