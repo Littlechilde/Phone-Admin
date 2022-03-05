@@ -15,19 +15,6 @@ less支持
 - 菜单权限；
 layout布局;
 
-# Vue 3 + Vite
-
-vue3
-vuex 4.x
-axios
-ant vue design@3.0.0beta
-vue-router
-mock.js
-
-菜单权限；
-layout布局
-
-
 语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html
 
 目下载和运行
