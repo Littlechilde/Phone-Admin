@@ -6,6 +6,9 @@ const systemApi = {
   role: baseURL + '/getRole',
   area: baseURL + '/area/getArea',
   callType:baseURL + '/callType',
+  userType:baseURL + '/userType',
+  roleType:baseURL + '/roleType',
+  areaType:baseURL + '/areaType'
 };
 
 // /* login */Mock.mock(rurl?, rtype?, template|function(options))
@@ -74,6 +77,84 @@ Mock.mock(
         describe: 32,
         address: 'Sidney No. 1 Lake Park',
         tags: ['cool', 'teacher'],
+      }]
+    }
+  }
+)
+
+Mock.mock(
+  systemApi.userType,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        key:'1',
+        callType: '范十月',
+        describe: "湘潭大学",
+      }, {
+        number: '2',
+        key:'2',
+        callType: '刘某',
+        describe: "工程学院土木系",
+      }, {
+        number: '3',
+        key:'3',
+        callType: '小贺',
+        describe: "娄底学院",
+      }]
+    }
+  }
+)
+
+Mock.mock(
+  systemApi.roleType,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        key:'1',
+        callType: '范十月',
+        describe: "admin",
+      }, {
+        number: '2',
+        key:'2',
+        callType: '刘某',
+        describe: "user",
+      }, {
+        number: '3',
+        key:'3',
+        callType: '小贺',
+        describe: "admin",
+      }]
+    }
+  }
+)
+
+Mock.mock(
+  systemApi.areaType,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        key:'1',
+        callType: '0731',
+        describe: "长沙市岳麓区梅溪湖",
+      }, {
+        number: '2',
+        key:'2',
+        callType: '0731',
+        describe: "湘潭市东湖路工程学院",
+      }, {
+        number: '3',
+        key:'3',
+        callType: '0739',
+        describe: "邵阳市双清区",
       }]
     }
   }

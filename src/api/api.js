@@ -5,6 +5,9 @@ export const systemApi ={
     role:'/getRole',
     area:'/area/getArea',
     callType:'/callType',
+    userType:'/userType',
+    roleType:'/roleType',
+    areaType:'/areaType',
     getPic:'int-admin/captchaSwagger.jpg'
 };
 //登录
@@ -35,6 +38,28 @@ export function getArea(data) {
 export function getCallType(data) {
   return request({
     url:systemApi.callType,
+    method: 'get',
+    params: data
+  })
+};
+
+export function getUserType(data) {
+  return request({
+    url:systemApi.userType,
+    method: 'get',
+    params: data
+  })
+};
+export function getRoleType(data) {
+  return request({
+    url:systemApi.roleType,
+    method: 'get',
+    params: data
+  })
+};
+export function getAreaType(data) {
+  return request({
+    url:systemApi.areaType,
     method: 'get',
     params: data
   })
