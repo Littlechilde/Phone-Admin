@@ -1,24 +1,13 @@
-import { Login, UserInfo } from '../api/api'
+import {UserInfo } from '../api/api'
 import router, { asyncRoutes } from '../router';
 
 const state = {
     token: localStorage.getItem('token'),
-    avatar: '',
-    username: '',
     roles: [],
     menus: []
 }
 
 const mutations = {
-    // SET_TOKEN: (state, token) => {
-    //     state.token = token
-    // },
-    SET_AVATAR: (state, avatar) => {
-        state.avatar = avatar
-    },
-    SET_USERNAME: (state, username) => {
-        state.username = username
-    },
     SET_ROLES: (state, roles) => {
         state.roles = roles
     },
@@ -28,21 +17,6 @@ const mutations = {
 }
 
 const actions = {
-    /* login */
-    // LoginResult({ commit }, userInfo) {
-    //     return new Promise((resolve, reject) => {
-    //         Login(userInfo).then(response => {
-    //             const { code, data:{token} } = response
-    //             if (!code) {
-    //                 localStorage.setItem('token', token)
-    //                 commit('SET_TOKEN', token)
-    //             }
-    //             resolve(response)
-    //         }).catch(error => {
-    //             reject(error)
-    //         })
-    //     })
-    // },
     /* getUserInfo */
     GetInfo({ commit }, token) {
         return new Promise((resolve, reject) => {
@@ -62,18 +36,13 @@ const actions = {
     },
     /* 用户登出 */
     LogoutResult({ commit }) {
-        commit('SET_TOKEN', '')
-        commit('SET_AVATAR', '')
-        commit('SET_USERNAME', '')
         commit('SET_ROLES', '')
         commit('SET_MENUS', '')
-        const Routes = router.getRoutes()
         /* 清楚动态路由 */
         asyncRoutes.forEach((item) => {
             router.removeRoute(item.name)
-        })
-        console.log(Routes)
-        localStorage.removeItem('token')
+        });
+        localStorage.clear();
     }
 }
 

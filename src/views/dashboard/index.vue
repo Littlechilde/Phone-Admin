@@ -36,17 +36,14 @@
     <a-card class="introduction">
       <h3>项目简介</h3>
       <p>
-        技术栈：vue3 +
-        ant-design-vue，使用vue3.2最新的setup语法搭建，并且封装了部分钩子函数，是用来学习vue3的一个良好选择，并且，项目集成了实际开发中常用的功能，可以作为一个参考项目继续开发
+        <text>
+       基于原本话单数据，通过数据接口从话务系统定时或者实时获取话单文件，实现系统自动提取话单文件内容，达到自动分析话单数据的目的。
+       完成各项数据统计分析。
+      系统具有大数据量查询速度快，大数据量存储安全，解析全面，实时性好的特点。
+        </text>
       </p>
       <p>
-        项目地址：<a style="color: #1890ff" href="https://github.com/BaiFangZi/vue3-antd-manage"
-          >github</a
-        >
-      </p>
-      <p>
-        项目预览地址 ：<a style="color: #1890ff" href="https://baifangzi.gitee.io/vue3-antd-manage"
-          >点击预览</a
+        项目背景：<a style="color: #1890ff" href="javascript:;">点击预览</a
         >
       </p>
     </a-card>

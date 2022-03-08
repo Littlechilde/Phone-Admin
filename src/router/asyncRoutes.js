@@ -236,6 +236,7 @@ export const asyncRoutes = [
     path: '/403',
     name: 'errorTags',
     hidden:true,
+    redirect:'/403noPower',
     component: () => import('@/layout/defaultRouter.vue'),
     meta: {
       title: '错误页', // 名称

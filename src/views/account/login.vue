@@ -1,38 +1,38 @@
 <!--  -->
 <template>
   <div class="login-container">
-    <a-row>
-      <a-col :xs="0" :md="0" :sm="12" :lg="14" :xl="16"></a-col>
-      <a-col :xs="24" :sm="24" :md="12" :lg="10" :xl="6">
+  <a-row style="width: 100%">
+      <a-col :span="18"></a-col>
+      <a-col :span="6">
         <div class="login-container-form">
           <header>
             <!-- <img src="@/assets/images/logo.png" /> -->
             <h1>话单登录系统</h1>
           </header>
           <a-form :model="form"  ref="formRef">
-            <a-form-item name="username" :rules="[{ required: true, message: '请输入用户名' }]">
-              <a-input v-model:value="form.username"  placeholder="请输入用户名">
+            <a-form-item name="username"  :rules="[{ required: true, message: '请输入用户名' }]">
+              <a-input v-model:value="form.username" size="large"  placeholder="请输入用户名">
                 <template v-slot:prefix>
                   <user-outlined type="user" />
                 </template>
               </a-input>
             </a-form-item>
             <a-form-item name="password" :rules="[{ required: true, message: '请输入密码' }]">
-              <a-input v-model:value="form.password"  type="password" placeholder="请输入密码">
+              <a-input-password v-model:value="form.password" size="large" type="password" placeholder="请输入密码">
                 <template v-slot:prefix>
                   <lock-outlined type="user" />
                 </template>
-              </a-input>
+              </a-input-password>
             </a-form-item>
             <a-form-item name="captcha"  :rules="[{ required: true, message: '请输入验证码' }]" class="codeFlex">
-              <a-input v-model:value="form.captcha" placeholder="请输入验证码"></a-input>
+              <a-input v-model:value="form.captcha" size="large" placeholder="请输入验证码"></a-input>
               <aside style="width:200px;margin-left: 20px;cursor:pointer" @click="code">
                 <img :src="codeSrc" style="width:100%;"  mode="widthFixed"/>
               </aside>
             </a-form-item>
           </a-form>
               <a-button type="primary"  @click="handleSubmit" block :loading="loading">登录</a-button>
-              <a-button  @click="handleReset" style="margin-top:16px;width: 100%;">重置</a-button>
+              <a-button  @click="handleReset" style="margin-top:16px;margin-bottom: 24px;width: 100%;">重置</a-button>
         </div>
       </a-col>
     </a-row>
@@ -141,16 +141,20 @@ export default defineComponent({
   height: 100vh;
   background: url("@/assets/images/login/login_bg.png");
   background-size: cover;
+  display:flex;
+  align-items: center;
+  // justify-content:center;
   &-form {
-    width: calc(100% - 40px);
-    height: 380px;
-    padding: 6vh;
-    margin-top: calc((100vh - 380px) / 2);
-    margin-right: 20px;
-    margin-left: 20px;
-    background: url("@/assets/images/login/login_form.png");
-    background-size: 100% 100%;
-    border-radius: 10px;
+    // width: calc(100% - 40px);
+    // height: 380px;
+    // margin-top: calc((100vh - 380px) / 2);
+    width: 370px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    width: 370px;
+    padding: 16px 28px;
+    // background: url("@/assets/images/login/login_form.png");
+    // background-size: 100% 100%;
     box-shadow: 0 2px 8px 0 rgba(7, 17, 27, 0.06);
     background-color: #fff;
 
@@ -166,9 +170,12 @@ export default defineComponent({
 
       h1 {
         margin-bottom: 0;
-        font-size: 24px;
-        color: #222;
-        text-align: center;
+        color: #1890ff;
+        font-weight: 500;
+        font-size: 20px;
+        letter-spacing: 3px;
+        text-decoration: none;
+        cursor: pointer;
       }
     }
   }

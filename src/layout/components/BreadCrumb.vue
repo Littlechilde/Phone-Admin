@@ -12,23 +12,40 @@
     </a-breadcrumb>
   </div>
 </template>
-<script setup>
+<script>
 import { ref, watch } from 'vue'
-import { useRoute,useRouter } from 'vue-router';
+import { useRoute } from 'vue-router';
 
-const routeNav = useRoute();
-const router = useRouter();
-
-let matchedRoute = ref([])
-watch(
-  () => routeNav.matched,
-  () => {
-    matchedRoute.value = routeNav.matched.slice(0)
-  },
-  {
-    immediate: true,
+export default {
+  setup(){
+  const routeNav = useRoute();
+  let matchedRoute = ref([]);
+  watch(
+    () => routeNav.matched,
+    () => {
+      matchedRoute.value = filterHidden(routeNav.matched)
+    },
+    {
+      immediate: true,
+    }
+  );
+  //递归查找hidden项
+  function filterHidden (routeNav){
+    const result= routeNav.filter((item)=>{
+      if(item.children){
+        item.children = filterHidden(item.children);
+      }
+      return !item.hidden
+    })
+    return result
   }
-)
+  
+  return {
+      matchedRoute,
+      filterHidden
+   }
+ }
+}
 </script>
 <style lang="less" scoped>
 .flex-center {

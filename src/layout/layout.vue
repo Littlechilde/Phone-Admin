@@ -32,7 +32,7 @@
                 <setting-outlined />
                   用户设置
                 </a-menu-item>
-                <a-menu-item>
+                <a-menu-item @click="loginOut">
                   <logout-outlined />
                   退出登录
                 </a-menu-item>
@@ -53,10 +53,13 @@
 <script>
 import { UserOutlined, VideoCameraOutlined, UploadOutlined, MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, DownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons-vue';
 
-import { defineComponent, ref } from 'vue';
-import { useRouter, useRoute } from 'vue-router';//引入路由
+import { defineComponent, ref,createVNode } from 'vue';
 import LayoutAside from "@/layout/components/aside/aside.vue";
-import BreadCrumb from './components/BreadCrumb.vue'
+import BreadCrumb from './components/BreadCrumb.vue';
+import { useStore } from "vuex";
+import { Modal } from 'ant-design-vue';
+import { useRouter } from 'vue-router';
+import { ExclamationCircleOutlined } from '@ant-design/icons-vue';
 
 export default defineComponent({
   name: 'Layout',
@@ -74,8 +77,32 @@ export default defineComponent({
     BreadCrumb
   },
   setup() {
+    const store = useStore();
+    const router = useRouter();
+    const loginOut = ()=>{
+       Modal.confirm({
+        title: '你确定注销吗?',
+        okText: '确认',
+        cancelText: '取消',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: createVNode('div', {
+          style: 'color:red;',
+        }, '注销后需重新登录'),
+        async onOk() {
+          await store.dispatch("user/LogoutResult");
+          await new Promise((resolve, reject) => {
+              setTimeout(()=>{router.replace('Login');resolve()}, 2000);
+           }).catch(() => console.log('Oops errors!'));
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+        class: 'test',
+      });
+    };
     return {
       collapsed: ref(false),
+      loginOut
     };
   },
 });
@@ -132,9 +159,9 @@ export default defineComponent({
     border-radius: 3px;
   }
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(144, 147, 153, 0.5);
+    background-color: rgba(144, 147, 153, 0.3);
     border-radius: 2px;
-    // box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
   }
   &::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0.05);
