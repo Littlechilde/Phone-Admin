@@ -1,6 +1,6 @@
 import Mock from 'mockjs'
 
-const baseURL = 'http://120.77.237.25:8080';
+const baseURL = 'http://119.23.247.196:8031';
 const systemApi = {
   login: baseURL + "/user/login",
   role: baseURL + '/getRole',
@@ -10,31 +10,31 @@ const systemApi = {
 
 // /* login */Mock.mock(rurl?, rtype?, template|function(options))
 // options指向本次请求的 Ajax 选项集，含有 url、type、body 三个属性。
-Mock.mock(
-  systemApi.login,
-  'post',
-  ({body}) => {
-    const { password, username } = JSON.parse(body)
-    if (username === 'admin' && password === '123456') {
-      return {
-          code : 200,
-          data:{
-            token:'admin'
-          }
-        }
-      } else if(username === 'editor' && password === '123456') {
-        return {
-          code : 200,
-          token:'editor-token'
-        }
-      } else {
-        return {
-          code : 200,
-          token:'test-token'
-        }
-      }
-  }
-)
+// Mock.mock(
+//   systemApi.login,
+//   'post',
+//   ({body}) => {
+//     const { password, username } = JSON.parse(body)
+//     if (username === 'admin' && password === '123456') {
+//       return {
+//           code : 200,
+//           data:{
+//             token:'admin'
+//           }
+//         }
+//       } else if(username === 'editor' && password === '123456') {
+//         return {
+//           code : 200,
+//           token:'editor-token'
+//         }
+//       } else {
+//         return {
+//           code : 200,
+//           token:'test-token'
+//         }
+//       }
+//   }
+// )
 
 Mock.mock(
   systemApi.area,

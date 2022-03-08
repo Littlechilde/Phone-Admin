@@ -1,7 +1,7 @@
 <template>
   <a-layout style="min-height:100vh">
       <!-- 左侧菜单 -->
-      <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible>
+      <a-layout-sider v-model:collapsed="collapsed" :trigger="null" collapsible class="scrollbar hidden" :style="{ overflowY: 'overlay', height: '100vh'}">
         <LayoutAside :collapsed="collapsed" />
       </a-layout-sider>
 
@@ -43,8 +43,8 @@
 
          <BreadCrumb />
         <!-- content -->
-        <a-layout-content :style="{ margin: '24px 16px', padding: '24px', background: '#fff', height:'auto' }">
-             <router-view/>
+        <a-layout-content :style="{ height:'auto' }">
+             <router-view :style="{ background: '#fff',margin: '24px 16px', padding: '24px'}"/>
         </a-layout-content>
       </a-layout>
   </a-layout>
@@ -123,5 +123,29 @@ export default defineComponent({
 }
 .ant-layout-content{
   flex:none;
+}
+.scrollbar {
+  overflow-y: overlay;
+  overflow-x: hidden;
+  &::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.5);
+    border-radius: 2px;
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
+  }
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+  }
+    box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
+    z-index: 101;
+}
+.hidden{
+  overflow-y: hidden !important;
+}
+.hidden:hover{
+  overflow-y: overlay !important;
 }
 </style>

@@ -11,42 +11,11 @@ export const asyncRoutes = [
       icon: 'icon-dashboard',
     },
   },
-  // 管理后台 
-  {
-    path: "/orderIndex",
-    name: "orderIndex",
-    redirect: {path:'/system'},
-    meta: {
-      title: "话单管理",
-      icon: "icon-mobile",
-      auth: ['admin', 'user'], // 权限
-    },
-    component: () => import('@/layout/defaultRouter.vue'),
-    children: [{
-        path: "/system",
-        name: "user",
-        meta: {
-          title: "明细话单",
-          auth: ['admin', 'user'],
-        },
-        component: () => import("@/views/system/role.vue"),
-      },
-      {
-        path: "/home",
-        name: "role",
-        meta: {
-          title: "号码资源管理",
-          auth: ['admin', 'user'],
-        },
-        component: () => import("@/views/others.vue"),
-      }
-    ]
-  },
   //三级菜单测试
   {
     path: '/area',
     name: 'area',
-    hidden: false,
+    hidden: true,
     meta: {
       title: '三级菜单测试页',
       icon: 'icon-USB',
@@ -82,6 +51,49 @@ export const asyncRoutes = [
       ]
     }]
   },
+  /*系统管理*/
+  {
+    path: '/systemManage',
+    name: 'systemManage',
+    hidden:false,
+    component: () => import('@/layout/defaultRouter.vue'),
+    meta: {
+      title: '系统管理', // 名称
+      auth: ['admin','user'], // 权限
+      icon: 'icon-setting',
+    },
+    redirect:'/userAdmin',
+    children: [{
+      path: "/userAdmin",
+      name: "userAdmin",
+      meta: {
+        title: "用户管理",
+        auth: ['admin', 'user'],
+      },
+      component: () => import("@/views/systemManage/user.vue"),
+    },
+    {
+      path: "/userRole",
+      name: "userRole",
+      meta: {
+        title: "角色管理",
+        auth: ['admin', 'user'],
+      },
+      component: () => import("@/views/systemManage/role.vue"),
+    }
+  ]
+  },
+  /**地区管理 */
+  {
+    path: '/areaManage',
+    name: 'areaManage',
+    component: () => import('@/views/areaManage/area.vue'),
+    meta: {
+      title: '地区管理', // 名称
+      auth: ['admin', 'user'], // 权限
+      icon: 'icon-location',
+    },
+  },
   {
     path: '/phoneType',
     name: 'orderType',
@@ -92,11 +104,138 @@ export const asyncRoutes = [
       icon: 'icon-file-text',
     },
   },
+    /**客户管理 */
+    {
+      path: '/userManage',
+      name: 'userManage',
+      hidden:false,
+      component: () => import('@/layout/defaultRouter.vue'),
+      meta: {
+        title: '客户管理', // 名称
+        auth: ['admin','user'], // 权限
+        icon: 'icon-user',
+      },
+      redirect:'/userList',
+      children: [{
+        path: "/userList",
+        name: "userList",
+        meta: {
+          title: "客户列表",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/userManage/userList.vue"),
+      },
+      {
+        path: "/paySetting",
+        name: "paySetting",
+        meta: {
+          title: "话费设置",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/userManage/callCharges.vue"),
+      }
+    ]
+    },
+  /**话单管理 */
+  {
+    path: "/billSetting",
+    name: "billSetting",
+    redirect: {path:'/billDetails'},
+    meta: {
+      title: "话单管理",
+      icon: "icon-mobile",
+      auth: ['admin', 'user'], // 权限
+    },
+    component: () => import('@/layout/defaultRouter.vue'),
+    children: [{
+        path: "/billDetails",
+        name: "billDetails",
+        meta: {
+          title: "明细话单",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/billManage/billDetails.vue"),
+      },
+      {
+        path: "/errorBill",
+        name: "errorBill",
+        meta: {
+          title: "异常话单",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/billManage/errorBill.vue"),
+      },
+      {
+        path: "/numberManage",
+        name: "numberManage",
+        meta: {
+          title: "号码资源管理",
+          auth: ['admin', 'user'],
+        },
+        component: () => import("@/views/billManage/numberManage.vue"),
+      }
+    ]
+  },
+    /**统计报表 */
+    {
+      path: '/total',
+      name: 'total',
+      component: () => import('@/views/statistics/form.vue'),
+      meta: {
+        title: '统计报表', // 名称
+        auth: ['admin', 'user'], // 权限
+        icon: 'icon-piechart',
+      },
+    },
+    /**系统规则  */
+    {
+      path: '/systemRule',
+      name: 'systemRule',
+      component: () => import('@/views/systemRule/rule.vue'),
+      meta: {
+        title: '系统规则', // 名称
+        auth: ['admin', 'user'], // 权限
+        icon: 'icon-wrench',
+      },
+    },
+    /**设备台账 */
+    {
+      path: '/equipmentLedger',
+      name: 'equipmentLedger',
+      component: () => import('@/views/equipmentLedger/ledger.vue'),
+      meta: {
+        title: '设备台账', // 名称
+        auth: ['admin', 'user'], // 权限
+        icon: 'icon-phone',
+      },
+    },
+    /*话机信息*/
+    {
+      path: '/infoManage',
+      name: 'infoManage',
+      component: () => import('@/views/infoManage/mobile.vue'),
+      meta: {
+        title: '话机信息管理', // 名称
+        auth: ['admin', 'user'], // 权限
+        icon: 'icon-mail',
+      },
+    },
+    /*活跃度统计*/
+    {
+      path: '/activity',
+      name: 'activity',
+      component: () => import('@/views/activity/statistical.vue'),
+      meta: {
+        title: '活跃度统计', // 名称
+        auth: ['admin', 'user'], // 权限
+        icon: 'icon-barchart',
+      },
+    },
   /**错误页 */
   {
     path: '/403',
     name: 'errorTags',
-    hidden:false,
+    hidden:true,
     component: () => import('@/layout/defaultRouter.vue'),
     meta: {
       title: '错误页', // 名称

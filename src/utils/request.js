@@ -1,10 +1,10 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 
-// let url = window.location.origin
+export const VITE_BASE_URL ='http://119.23.247.196:8031';
+
 const service = axios.create({
-  // baseURL:url,
-  baseURL:'http://120.77.237.25:8080/',
+  baseURL:VITE_BASE_URL,
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 15000,
   headers: {'content-type': 'application/json'}
@@ -15,7 +15,7 @@ service.interceptors.request.use(
   config => {
     const token = localStorage.getItem('token');
     if (token) {
-      // config.headers['X-AUTH-TOKEN'] = token;
+      config.headers['X-AUTH-TOKEN'] = token;
     }
     return config
   },
@@ -32,7 +32,10 @@ service.interceptors.response.use(
   // 2xx 范围内的状态码都会触发该函数。
   response => {
     const {data} = response;
-    message.success('成功');
+    const {code,msg}= data;
+    if(code==-1){
+      message.error(msg+'：'+data.data)
+    }
     return data
   },
   // 对响应错误做点什么

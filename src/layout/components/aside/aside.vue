@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="menuSider">
       <div class="logo" />
       <a-menu v-model:selectedKeys="selectedKeys"  v-model:openKeys="openKeys" theme="dark" mode="inline" @click="selectMenu" @openChange="openChange">
         <template v-for="item in menuList">
             <template v-if="!item.hidden">
                 <!-- 无子菜单 -->
                  <a-menu-item v-if="hasOnlyChildren(item)" :key="item.path" @click="clickMenuItem(item.name)">
-                     <icon-font :type="item.meta.icon" v-if="item.meta.icon" :style="{fontSize:collapsed ? '18px':'16px'}"/>
+                     <icon-font :type="item.meta.icon" v-if="item.meta.icon" :style="{fontSize:collapsed ? '20px':'18px'}"/>
                      <span>{{ item.meta.title }}</span>
                  </a-menu-item>
                  <!-- 有子菜单 -->
@@ -89,5 +89,9 @@ export default {
   height: 32px;
   background: rgba(255, 255, 255, 0.3);
   margin: 16px;
+}
+.menuSider{
+  box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
+  //  width:calc(100% + 6px);
 }
 </style>

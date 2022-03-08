@@ -23,7 +23,7 @@ let matchedRoute = ref([])
 watch(
   () => routeNav.matched,
   () => {
-    matchedRoute.value = routeNav.matched.slice(1)
+    matchedRoute.value = routeNav.matched.slice(0)
   },
   {
     immediate: true,

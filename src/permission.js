@@ -9,9 +9,8 @@ router.beforeEach(async (to, from, next) => {
   const menuList = store.state.auth.menuList;
 
   if (to.path === '/login') {
-    // if (!token) next();
-    // else next('/dashboard')
-    next()
+    if (!token) next();
+    else next('/dashboard')
   } else if (token) {
     //  正常跳转 ，已生成路由
     if (menuList.length) {
@@ -20,10 +19,7 @@ router.beforeEach(async (to, from, next) => {
       //  生成路由在跳转
       const auth = token; // 解析token 或者请求后台回去登陆角色
       store.commit('auth/GENERATE_ROUTES', auth);
-      next({
-        path: to.path,
-        replace: true,
-      })
+      next({ ...to, replace: true })
     }
   } else {
     next('/login');

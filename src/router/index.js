@@ -4,7 +4,7 @@ const routes = [
   {
     path: '/login',
     name: 'Login',
-    component: () => import('@/views/account/login-1.vue'),
+    component: () => import('@/views/account/login.vue'),
   },
 ];
 const router = createRouter({

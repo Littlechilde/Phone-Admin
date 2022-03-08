@@ -10,9 +10,9 @@ const state = {
 }
 
 const mutations = {
-    SET_TOKEN: (state, token) => {
-        state.token = token
-    },
+    // SET_TOKEN: (state, token) => {
+    //     state.token = token
+    // },
     SET_AVATAR: (state, avatar) => {
         state.avatar = avatar
     },
@@ -29,20 +29,20 @@ const mutations = {
 
 const actions = {
     /* login */
-    LoginResult({ commit }, userInfo) {
-        return new Promise((resolve, reject) => {
-            Login(userInfo).then(response => {
-                const { code, data:{token} } = response
-                if (code == 200) {
-                    localStorage.setItem('token', token)
-                    commit('SET_TOKEN', token)
-                }
-                resolve(response)
-            }).catch(error => {
-                reject(error)
-            })
-        })
-    },
+    // LoginResult({ commit }, userInfo) {
+    //     return new Promise((resolve, reject) => {
+    //         Login(userInfo).then(response => {
+    //             const { code, data:{token} } = response
+    //             if (!code) {
+    //                 localStorage.setItem('token', token)
+    //                 commit('SET_TOKEN', token)
+    //             }
+    //             resolve(response)
+    //         }).catch(error => {
+    //             reject(error)
+    //         })
+    //     })
+    // },
     /* getUserInfo */
     GetInfo({ commit }, token) {
         return new Promise((resolve, reject) => {

@@ -1,6 +1,6 @@
 <template>
   <div>
-    user
+    详情
   </div>
 </template>
 
@@ -12,7 +12,7 @@ export default {
     const state = reactive({
       count: 0,
     })
-  
+
     return {
       ...toRefs(state),
     }
