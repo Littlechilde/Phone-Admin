@@ -17,7 +17,7 @@ router.beforeEach(async (to, from, next) => {
       next();
     } else {
       //  生成路由在跳转
-      const auth = token; // 解析token 或者请求后台回去登陆角色
+      const auth = 'admin'; // 解析token 或者请求后台回去登陆角色
       store.commit('auth/GENERATE_ROUTES', auth);
       next({ ...to, replace: true })
     }

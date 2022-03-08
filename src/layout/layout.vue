@@ -134,7 +134,7 @@ export default defineComponent({
   &::-webkit-scrollbar-thumb {
     background-color: rgba(144, 147, 153, 0.5);
     border-radius: 2px;
-    box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
+    // box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
   }
   &::-webkit-scrollbar-track {
     background-color: rgba(0, 0, 0, 0.05);
