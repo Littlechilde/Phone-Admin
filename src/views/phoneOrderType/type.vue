@@ -17,10 +17,10 @@
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
-            <a @click="edit">编辑</a>
+            <a @click="edit(text)">编辑</a>
             <a-divider type="vertical" />
             <!-- 操作气泡框 -->
-            <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel" @cancel="cancelDel">
+            <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel(text)" @cancel="cancelDel">
               <a href="javascript:;" style="color:#f5222d">删除</a>
             </a-popconfirm>
             <a-divider type="vertical" />
@@ -48,7 +48,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs,onMounted} from 'vue';
+import { defineComponent, ref, reactive, toRefs,toRef,onMounted,toRaw} from 'vue';
 import { DownOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 
@@ -68,12 +68,12 @@ const columns = [{
   width: 100
 }, {
   title: '类型名称',
-  dataIndex: 'type',
-  key: 'type',
+  dataIndex: 'callType',
+  key: 'callType',
 }, {
   title: '描述',
-  dataIndex: 'mark',
-  key: 'mark',
+  dataIndex: 'describe',
+  key: 'describe',
   ellipsis: true,
 },
  {
@@ -94,7 +94,8 @@ export default defineComponent({
       selectedRowKeys: [],
       title:'新增类型',
       spinning:true,
-      data:[]
+      data:[],
+      key:0,
     });
     const formState = reactive({
       callType: '',
@@ -108,10 +109,16 @@ export default defineComponent({
       state.selectedRowKeys = selectedRowKeys;
     };
     const showModal = () => {
+      state.title = '新增类型';
       visible.value = true;
+      formState.callType = '';
+      formState.describe = '';
     };
-    const edit = () => {
+    const edit = (text) => {
       state.title = '编辑类型';
+      formState.callType = text.callType;
+      formState.describe = text.describe;
+      state.key = text.key;
       visible.value = true;
     }
     const onFinish = values => {
@@ -127,28 +134,47 @@ export default defineComponent({
     //表单提交
     const handleOk =async () => {
       const values = await formRef.value.validateFields();
-      console.log('Success:', values);
       confirmLoading.value = true;
-      setTimeout(() => {
-        visible.value = false;
-        confirmLoading.value = false;
-        resetForm();
-      }, 2000);
+      if(state.title=='新增类型'){
+        setTimeout(() => {
+          visible.value = false;
+          //模拟add
+          state.data.push({...values,key:state.data.length+1,number:state.data.length+1});
+          console.log(state.data)
+          confirmLoading.value = false;
+          message.success('Success');
+          resetForm();
+        }, 1000);
+      }else{
+        //修改
+         setTimeout(() => {
+          visible.value = false;
+          state.data[Number(state.key)-1]={...values,key:state.data.length+1,number:state.data.length+1};
+          confirmLoading.value = false;
+          message.success('Success');
+          resetForm();
+        }, 2000);
+      }
     };
     //表单取消
     const cancel=() => {
       console.log('Cancelled')
+      confirmLoading.value = false;
       resetForm();
     }
-    const confirmDel = e => {
-      console.log(e);
-      message.success('Click on Yes');
+    const confirmDel = text => {
+      console.log(text);
+      setTimeout(() =>{
+        state.data = state.data.filter((item ,index)=>item.key != text.key);
+        message.success('删除成功');
+      },1000)
     };
     const cancelDel = e => {
       console.log(e);
       message.error('Click on No');
     };
-
+    
+    /*查询列表*/
     async function queryType() {
       if(!state.spinning)
       state.spinning = true;

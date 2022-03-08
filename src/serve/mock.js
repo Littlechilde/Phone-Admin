@@ -56,22 +56,22 @@ Mock.mock(
       data: [{
         number: '1',
         key:'1',
-        type: '市话',
-        mark: 32,
+        callType: '市话',
+        describe: 32,
         address: 'New York No. 1 Lake Park',
         tags: ['nice', 'developer'],
       }, {
         number: '2',
         key:'2',
-        type: '长途',
-        mark: 42,
+        callType: '长途',
+        describe: 42,
         address: 'London No. 1 Lake Park',
         tags: ['loser'],
       }, {
         number: '3',
         key:'3',
-        type: '长途',
-        mark: 32,
+        callType: '长途',
+        describe: 32,
         address: 'Sidney No. 1 Lake Park',
         tags: ['cool', 'teacher'],
       }]
