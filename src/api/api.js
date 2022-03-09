@@ -8,6 +8,8 @@ export const systemApi ={
     userType:'/userType',
     roleType:'/roleType',
     areaType:'/areaType',
+    userList:'/userList',
+    payList:'/payList',
     getPic:'int-admin/captchaSwagger.jpg'
 };
 //登录
@@ -60,6 +62,20 @@ export function getRoleType(data) {
 export function getAreaType(data) {
   return request({
     url:systemApi.areaType,
+    method: 'get',
+    params: data
+  })
+};
+export function getUserList(data) {
+  return request({
+    url:systemApi.userList,
+    method: 'get',
+    params: data
+  })
+};
+export function getPayType(data) {
+  return request({
+    url:systemApi.payList,
     method: 'get',
     params: data
   })

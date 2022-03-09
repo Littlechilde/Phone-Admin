@@ -1,13 +1,25 @@
 <template>
   <div>
-    <!-- 首页 -->
+   组件
   </div>
 </template>
 
-<script setup>
+<script>
+import { reactive, toRefs } from 'vue'
 
+export default {
+  setup () {
+    const state = reactive({
+      count: 0,
+    })
+  
+    return {
+      ...toRefs(state),
+    }
+  }
+}
 </script>
 
-<style lang="scss" scoped>
+<style lang="less" scoped>
 
 </style>

@@ -8,7 +8,9 @@ const systemApi = {
   callType:baseURL + '/callType',
   userType:baseURL + '/userType',
   roleType:baseURL + '/roleType',
-  areaType:baseURL + '/areaType'
+  areaType:baseURL + '/areaType',
+  userList:baseURL + '/userList',
+  payList:baseURL + '/payList',
 };
 
 // /* login */Mock.mock(rurl?, rtype?, template|function(options))
@@ -155,6 +157,67 @@ Mock.mock(
         key:'3',
         callType: '0739',
         describe: "邵阳市双清区",
+      }]
+    }
+  }
+)
+
+Mock.mock(
+  systemApi.userList,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        key:'1',
+        name: '小范',
+        address: "长沙市岳麓区梅溪湖",
+        user:'小贺',
+        phone: "17135367892",
+        checked: true
+      }, {
+        number: '2',
+        key:'2',
+        name: '贺老板',
+        address: "湘潭市东湖路工程学院北",
+        user:'小贺',
+        phone: "17123334441",
+        checked: false,
+      }, {
+        number: '3',
+        key:'3',
+        name: '李总',
+        address: "长沙市开福区开福寺",
+        user:'小范',
+        phone: "17123334441",
+        checked: false,
+      }]
+    }
+  }
+)
+
+Mock.mock(
+  systemApi.payList,
+  'get',
+  (options) => {
+    return {
+      code: 200,
+      data: [{
+        number: '1',
+        key:'1',
+        callType: '市话',
+        describe: "2元/分钟",
+      }, {
+        number: '2',
+        key:'2',
+        callType: '市话',
+        describe: "3元/分钟",
+      }, {
+        number: '3',
+        key:'3',
+        callType: '市话',
+        describe: "0.2元/分钟",
       }]
     }
   }

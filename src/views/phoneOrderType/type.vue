@@ -100,7 +100,6 @@ export default defineComponent({
     const formState = reactive({
       callType: '',
       describe: '',
-      remember: true,
     });
 
     //表格勾选
@@ -147,10 +146,12 @@ export default defineComponent({
         }, 1000);
       }else{
         //修改
+         state.spinning = true;
          setTimeout(() => {
           visible.value = false;
           state.data[Number(state.key)-1]={...values,key:state.data.length+1,number:state.data.length+1};
           confirmLoading.value = false;
+          state.spinning = false;
           message.success('Success');
           resetForm();
         }, 2000);
@@ -163,10 +164,12 @@ export default defineComponent({
       resetForm();
     }
     const confirmDel = text => {
+      state.spinning =true;
       console.log(text);
       setTimeout(() =>{
         state.data = state.data.filter((item ,index)=>item.key != text.key);
         message.success('删除成功');
+        state.spinning =false;
       },1000)
     };
     const cancelDel = e => {

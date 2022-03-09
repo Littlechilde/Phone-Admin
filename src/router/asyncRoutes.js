@@ -104,6 +104,17 @@ export const asyncRoutes = [
       icon: 'icon-file-text',
     },
   },
+   /**号段管理 */
+   {
+    path: '/scopeManage',
+    name: 'scopeManage',
+    component: () => import('@/views/scopeManage/scope.vue'),
+    meta: {
+      title: '号段管理', // 名称
+      auth: ['admin', 'user'], // 权限
+      icon: 'icon-column-width',
+    },
+  },
     /**客户管理 */
     {
       path: '/userManage',
