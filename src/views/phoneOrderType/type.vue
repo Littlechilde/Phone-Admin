@@ -110,8 +110,8 @@ export default defineComponent({
     const showModal = () => {
       state.title = '新增类型';
       visible.value = true;
-      // formState.callType = '';
-      // formState.describe = '';
+      formState.callType = '';
+      formState.describe = '';
     };
     const edit = (text) => {
       state.title = '编辑类型';
@@ -149,7 +149,7 @@ export default defineComponent({
          state.spinning = true;
          setTimeout(() => {
           visible.value = false;
-          state.data[Number(state.key)-1]={...values,key:state.data.length+1,number:state.data.length+1};
+          state.data[Number(state.key)-1]={...state.data[Number(state.key)-1],...values}; //修改部分 覆盖
           confirmLoading.value = false;
           state.spinning = false;
           message.success('Success');

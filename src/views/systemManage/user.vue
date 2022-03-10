@@ -17,7 +17,7 @@
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
-            <a @click="edit(text)">编辑</a>
+            <a @click="edit(column, text,record)">编辑</a>
             <a-divider type="vertical" />
             <!-- 操作气泡框 -->
             <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel(text)" @cancel="cancelDel">
@@ -31,8 +31,8 @@
     <!-- model开始 -->
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-        <a-form-item label="部门名称" name="deptName" :rules="[{ required: true, message: '请输入部门名称' }]">
-          <a-input v-model:value="formState.deptName" />
+        <a-form-item label="部门ID" name="deptId" :rules="[{ required: true, message: '请输入部门ID' }]">
+          <a-input v-model:value="formState.deptId" />
         </a-form-item>
         <a-form-item label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
           <a-input v-model:value="formState.username" />
@@ -71,7 +71,7 @@ const columns = [{
 {
   title: '部门名称',
   dataIndex: 'deptName',
-  key: 'deptName',
+  key: 'deptName',//Vue 需要的 key，如果已经设置了唯一的 dataIndex，可以忽略这个属性
 },
  {
   title: '用户名',
@@ -114,11 +114,13 @@ export default defineComponent({
       data:[],
       key:0,
     });
-    let formState = reactive({
-      deptName: '',
+    const formState = reactive({
       username: '',
       mobile:'',
       email: '',
+      deptId:0,
+      roleIdList:[],
+      password:''
     });
 
     //表格勾选
@@ -133,13 +135,13 @@ export default defineComponent({
         formState[i] = ''
       }
     };
-    const edit = (text) => {
+    const edit = (column, text,record) => {
       state.title = '编辑类型';
-      formState.deptName = text.deptName;
+      formState.deptId = text.deptId;
       formState.username = text.username;
       formState.mobile = text.mobile;
       formState.email = text.email;
-      state.key = text.key;
+      console.log(state.formState);
       visible.value = true;
     }
     const onFinish = values => {
@@ -169,10 +171,13 @@ export default defineComponent({
       }else{
         //修改
          setTimeout(async () => {
-          await userUpdate(formState);
-          queryList();
+          const {code} = await userUpdate(formState);
+          if(!code){
+            visible.value = false;
+            message.success('Success');
+            queryList();
+          }
           confirmLoading.value = false;
-          message.success('Success');
           resetForm();
         }, 400);
       }

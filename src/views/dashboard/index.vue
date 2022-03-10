@@ -53,6 +53,7 @@
         项目背景：<a style="color: #1890ff" href="javascript:;">点击预览</a
         >
       </p>
+      <helloWorld/>
     </a-card>
   </div>
 </template>

@@ -32,9 +32,9 @@ service.interceptors.response.use(
   // 2xx 范围内的状态码都会触发该函数。
   response => {
     const {data} = response;
-    const {code,msg}= data;
-    if(code==-1){
-      message.error(msg+'：'+data.data)
+    const {code}= data;
+    if(code && code !== 200) {
+      message.error(data.message)
     }
     return data
   },
