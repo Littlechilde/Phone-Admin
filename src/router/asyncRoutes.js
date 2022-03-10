@@ -176,15 +176,15 @@ export const asyncRoutes = [
         },
         component: () => import("@/views/billManage/errorBill.vue"),
       },
-      {
-        path: "/numberManage",
-        name: "numberManage",
-        meta: {
-          title: "号码资源管理",
-          auth: ['admin', 'user'],
-        },
-        component: () => import("@/views/billManage/numberManage.vue"),
-      }
+      // {
+      //   path: "/numberManage",
+      //   name: "numberManage",
+      //   meta: {
+      //     title: "号码资源管理",
+      //     auth: ['admin', 'user'],
+      //   },
+      //   component: () => import("@/views/billManage/numberManage.vue"),
+      // }
     ]
   },
     /**统计报表 */
@@ -199,16 +199,16 @@ export const asyncRoutes = [
       },
     },
     /**系统规则  */
-    {
-      path: '/systemRule',
-      name: 'systemRule',
-      component: () => import('@/views/systemRule/rule.vue'),
-      meta: {
-        title: '系统规则', // 名称
-        auth: ['admin', 'user'], // 权限
-        icon: 'icon-wrench',
-      },
-    },
+    // {
+    //   path: '/systemRule',
+    //   name: 'systemRule',
+    //   component: () => import('@/views/systemRule/rule.vue'),
+    //   meta: {
+    //     title: '系统规则', // 名称
+    //     auth: ['admin', 'user'], // 权限
+    //     icon: 'icon-wrench',
+    //   },
+    // },
     /**设备台账 */
     {
       path: '/equipmentLedger',

@@ -4,21 +4,26 @@ import router, { constantRoutes, asyncRoutes } from '../router';
 const state = {
   auth: localStorage.getItem('token') || '',
   menuList: [],
-  // selectedKeys:[localStorage.getItem('selectedKeys')]
 };
 //响应组件中操作
-const actions = {};
+const actions = {
+ async routers({ commit }, auth){
+    return new Promise((resolve, reject) => {
+      const layout = constantRoutes.find((item) => item.path === '/');
+      //角色筛选
+      const authRoutes = traversalRoutes(asyncRoutes, auth);
+      layout.children = [...authRoutes];
+      commit('GENERATE_ROUTES', authRoutes);
+      constantRoutes.forEach((r) => router.addRoute(r));
+      resolve();
+    })
+  }
+};
 //执行action中的操作,或组件直接操作——用于操作数据（state）
 const mutations = {
-  async GENERATE_ROUTES(state, auth) {
-    const layout = constantRoutes.find((item) => item.path === '/');
-    //角色筛选
-    const authRoutes = traversalRoutes(asyncRoutes, auth);
-    layout.children = [...authRoutes];
+  async GENERATE_ROUTES(state, authRoutes) {
     state.menuList = authRoutes;
-    state.auth = auth;
-    constantRoutes.forEach((r) => router.addRoute(r));
-    console.log(constantRoutes,'router')
+    // state.auth = auth;
   },
   /**面包屑、记住aside栏点击事件 key，跟随menulist*/
   /*async ASIDE_KEY(state,key){

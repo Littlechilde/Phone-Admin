@@ -110,8 +110,8 @@ export default defineComponent({
     const showModal = () => {
       state.title = '新增类型';
       visible.value = true;
-      formState.callType = '';
-      formState.describe = '';
+      // formState.callType = '';
+      // formState.describe = '';
     };
     const edit = (text) => {
       state.title = '编辑类型';

@@ -40,12 +40,14 @@
 </template>
 
 <script>
-import { UserOutlined, LockOutlined } from "@ant-design/icons-vue";
+import { UserOutlined, LockOutlined  } from "@ant-design/icons-vue";
 import { defineComponent, reactive, toRefs,onMounted,ref, nextTick } from "vue";
-import { message } from "ant-design-vue";
+import { message,notification } from "ant-design-vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
-import {getArea,getCode,Login} from "@/api/api";
+import {getCode,Login} from "@/api/api";
+import {userInfo} from "@/api/user";
+import {timeFix} from "@/utils/time"
 
 export default defineComponent({
   name: "Login",
@@ -89,18 +91,22 @@ export default defineComponent({
     //点击登录
     const handleSubmit = async () => {
       await formRef.value.validateFields();
-      //-->登录
-      // const res = await store.dispatch("user/LoginResult", state.form);
       state.loading=true;
       const {code,data} = await Login(state.form);
         if (!code) {
           localStorage.setItem('token', data);
+          /*解析token*/
+          const array= data.split('.');
+          const str= array[1];
+          const {username,userId}=JSON.parse(decodeURIComponent(escape(window.atob(str))));
           const toPath = decodeURIComponent(route.query?.redirect || "/"); //获取登录成功后要跳转的路由。
-          message.success("登录成功！");
+          const auth = username;
           /* 获取用户信息、身份 */
-          const auth = 'admin';
-          // const result = await store.dispatch("user/GetInfo", auth);
-          await store.commit('auth/GENERATE_ROUTES', auth);
+          // await userInfo({userId:userId})
+          message.success("登录成功！");
+          openNotificationWithIcon('success');
+          await store.dispatch("user/GetInfo", userId);
+          await store.dispatch('auth/routers', auth);
           router.replace(toPath).then(() => {
             if (route.name == "login") {
               router.replace("/dashboard");
@@ -114,6 +120,15 @@ export default defineComponent({
     const handleReset=() =>{
        formRef.value.resetFields();
     };
+    const openNotificationWithIcon = type => {
+      setTimeout(() => {
+        notification[type]({
+          message: '欢迎',
+          description: `${timeFix()}， 欢迎回来`,
+        });
+      },1000)
+    };
+
     //验证码
     async function code() {
       const {data:{captchaImage,captchaToken}}= await getCode({});

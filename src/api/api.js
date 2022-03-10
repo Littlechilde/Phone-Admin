@@ -2,15 +2,16 @@ import request from '@/utils/request';
 
 export const systemApi ={
     login:"/int-admin/sys/login",
-    role:'/getRole',
+    getPic:'int-admin/captchaSwagger.jpg',
     area:'/area/getArea',
+
+    role:'/getRole',
     callType:'/callType',
     userType:'/userType',
     roleType:'/roleType',
     areaType:'/areaType',
     userList:'/userList',
     payList:'/payList',
-    getPic:'int-admin/captchaSwagger.jpg'
 };
 //登录
 export function Login(data) {
@@ -20,12 +21,12 @@ export function Login(data) {
     params:data
   })
 };
-// 获取用户角色权限的动态菜单（mock)
-export function UserInfo(data) {
+//获取code验证码
+export function getCode(data) {
   return request({
-    url:systemApi.role,
-    method: 'post',
-    data
+    url:systemApi.getPic,
+    method: 'get',
+    params: data
   })
 };
 //获取地区
@@ -34,6 +35,15 @@ export function getArea(data) {
     url:systemApi.area,
     method: 'get',
     params: data
+  })
+};
+/*@mock*/
+// 获取用户角色权限的动态菜单（mock)
+export function UserInfo(data) {
+  return request({
+    url:systemApi.role,
+    method: 'post',
+    data
   })
 };
 //获取类型
@@ -76,14 +86,6 @@ export function getUserList(data) {
 export function getPayType(data) {
   return request({
     url:systemApi.payList,
-    method: 'get',
-    params: data
-  })
-};
-//获取code验证码
-export function getCode(data) {
-  return request({
-    url:systemApi.getPic,
     method: 'get',
     params: data
   })

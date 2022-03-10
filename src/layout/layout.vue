@@ -22,7 +22,7 @@
                 </template>
               </a-avatar>
               <a class="ant-dropdown-link" @click.prevent>
-                Admin
+                {{name}}
                 <DownOutlined />
               </a>
             </span>
@@ -53,7 +53,7 @@
 <script>
 import { UserOutlined, VideoCameraOutlined, UploadOutlined, MenuUnfoldOutlined, MenuFoldOutlined, HomeOutlined, DownOutlined, LogoutOutlined, SettingOutlined } from '@ant-design/icons-vue';
 
-import { defineComponent, ref,createVNode } from 'vue';
+import { defineComponent, ref,createVNode,computed } from 'vue';
 import LayoutAside from "@/layout/components/aside/aside.vue";
 import BreadCrumb from './components/BreadCrumb.vue';
 import { useStore } from "vuex";
@@ -79,6 +79,7 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const router = useRouter();
+    const name = computed(()=> store.state.user.username);
     const loginOut = ()=>{
        Modal.confirm({
         title: '你确定注销吗?',
@@ -89,10 +90,10 @@ export default defineComponent({
           style: 'color:red;',
         }, '注销后需重新登录'),
         async onOk() {
-          await store.dispatch("user/LogoutResult");
           await new Promise((resolve, reject) => {
               setTimeout(()=>{router.replace('Login');resolve()}, 2000);
            }).catch(() => console.log('Oops errors!'));
+          await store.dispatch("user/LogoutResult");
         },
         onCancel() {
           console.log('Cancel');
@@ -102,7 +103,8 @@ export default defineComponent({
     };
     return {
       collapsed: ref(false),
-      loginOut
+      loginOut,
+      name
     };
   },
 });

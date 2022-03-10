@@ -31,11 +31,17 @@
     <!-- model开始 -->
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-        <a-form-item label="操作员名称" name="callType" :rules="[{ required: true, message: '请输入操作员名称' }]">
-          <a-input v-model:value="formState.callType" />
+        <a-form-item label="部门名称" name="deptName" :rules="[{ required: true, message: '请输入部门名称' }]">
+          <a-input v-model:value="formState.deptName" />
         </a-form-item>
-        <a-form-item label="操作员备注" name="describe" :rules="[{ required: true, message: '请输入相关描述' }]">
-          <a-input v-model:value="formState.describe" />
+        <a-form-item label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
+          <a-input v-model:value="formState.username" />
+        </a-form-item>
+        <a-form-item label="手机号" name="mobile" :rules="[{ required: true, message: '请输入手机号' }]">
+          <a-input v-model:value="formState.mobile" />
+        </a-form-item>
+        <a-form-item label="邮箱" name="email">
+          <a-input v-model:value="formState.email" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -47,7 +53,7 @@ import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
 import { DownOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 
-import {getUserType} from '@/api/api';
+import {userList,userUpdate} from '@/api/user';
 const formItemLayout = {
     labelCol: {
       span: 6,
@@ -58,19 +64,35 @@ const formItemLayout = {
 };
 const columns = [{
   title: '序号',
-  dataIndex: 'number',
-  key: 'number',
+  dataIndex: 'key',
+  key: 'key',
   width: 100
+},
+{
+  title: '部门名称',
+  dataIndex: 'deptName',
+  key: 'deptName',
+},
+ {
+  title: '用户名',
+  dataIndex: 'username',
+  key: 'username',
 }, {
-  title: '操作员名称',
-  dataIndex: 'callType',
-  key: 'callType',
-}, {
-  title: '操作员备注',
-  dataIndex: 'describe',
-  key: 'describe',
+  title: '手机号',
+  dataIndex: 'mobile',
+  key: 'mobile',
   ellipsis: true,
 },
+{
+  title: '邮箱',
+  dataIndex: 'email',
+  key: 'email',
+},
+{
+  title: '角色ID列表',
+  dataIndex: 'roleIdList',
+  key: 'roleIdList',
+  },
  {
   title: '操作',
   key: 'action',
@@ -92,10 +114,11 @@ export default defineComponent({
       data:[],
       key:0,
     });
-    const formState = reactive({
-      callType: '',
-      describe: '',
-      remember: true,
+    let formState = reactive({
+      deptName: '',
+      username: '',
+      mobile:'',
+      email: '',
     });
 
     //表格勾选
@@ -106,13 +129,16 @@ export default defineComponent({
     const showModal = () => {
       state.title = '新增类型';
       visible.value = true;
-      formState.callType = '';
-      formState.describe = '';
+      for(let i in formState){
+        formState[i] = ''
+      }
     };
     const edit = (text) => {
       state.title = '编辑类型';
-      formState.callType = text.callType;
-      formState.describe = text.describe;
+      formState.deptName = text.deptName;
+      formState.username = text.username;
+      formState.mobile = text.mobile;
+      formState.email = text.email;
       state.key = text.key;
       visible.value = true;
     }
@@ -142,13 +168,13 @@ export default defineComponent({
         }, 1000);
       }else{
         //修改
-         setTimeout(() => {
-          visible.value = false;
-          state.data[Number(state.key)-1]={...values,key:state.data.length+1,number:state.data.length+1};
+         setTimeout(async () => {
+          await userUpdate(formState);
+          queryList();
           confirmLoading.value = false;
           message.success('Success');
           resetForm();
-        }, 2000);
+        }, 400);
       }
     };
     //表单取消
@@ -170,16 +196,19 @@ export default defineComponent({
     };
     
     /*查询列表*/
-    async function queryType() {
+    async function queryList() {
       if(!state.spinning)
       state.spinning = true;
-      const {data} = await getUserType({});
-      state.data = data;
+      const {data:{data}} = await userList({});
+      state.data = data.map((item,index)=>{
+        return {key:index+1, ...item}
+      });
       state.spinning =false;
-    }
+    };
+
     onMounted(async ()=>{
       console.log('---onMounted---');
-      await queryType();
+      await queryList();
     });
     return {
       ...toRefs(state),
