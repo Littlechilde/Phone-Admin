@@ -3,8 +3,10 @@
     <!-- 操作项 -->
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
-        <a-button type="primary" @click="showModal">新增</a-button>
-        <a-button type="primary" style="margin-left: 16px;" danger>批量删除</a-button>
+        <a-space :size="16" align="center">
+          <a-button type="primary" @click="showModal">新增</a-button>
+          <a-button type="primary"  danger>批量删除</a-button>
+        </a-space>
       </a-col>
     </a-row>
     <!-- table开始 -->
@@ -32,16 +34,22 @@
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
         <a-form-item label="部门ID" name="deptId" :rules="[{ required: true, message: '请输入部门ID' }]">
-          <a-input v-model:value="formState.deptId" />
+          <a-input v-model:value="formState.deptId" placeholder="请输入部门ID"/>
         </a-form-item>
         <a-form-item label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
-          <a-input v-model:value="formState.username" />
+          <a-input v-model:value="formState.username" placeholder="请输入用户名"/>
         </a-form-item>
         <a-form-item label="手机号" name="mobile" :rules="[{ required: true, message: '请输入手机号' }]">
-          <a-input v-model:value="formState.mobile" />
+          <a-input v-model:value="formState.mobile" placeholder="请输入手机号码"/>
         </a-form-item>
-        <a-form-item label="邮箱" name="email">
-          <a-input v-model:value="formState.email" />
+        <a-form-item label="邮箱" name="email" :rules="[{ required: true, message: '请输入邮箱' }]">
+          <a-input v-model:value="formState.email"  placeholder="请输入邮箱"/>
+        </a-form-item>
+        <a-form-item :label="title=='编辑用户' ?'原密码':'密码'" name="password" :rules="[{ required: title=='编辑用户' ? false:true, message: '请输入密码' }]">
+          <a-input-password v-model:value="formState.password" placeholder="请输入密码" />
+        </a-form-item>
+        <a-form-item label="新密码" name="newPassword" v-if="title=='编辑用户'">
+          <a-input-password v-model:value="formState.newPassword" placeholder="请输入新密码" />
         </a-form-item>
       </a-form>
     </a-modal>
@@ -53,7 +61,7 @@ import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
 import { DownOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
 
-import {userList,userUpdate} from '@/api/user';
+import {userList,userUpdate,userPassword,userSave,userDelete} from '@/api/user';
 const formItemLayout = {
     labelCol: {
       span: 6,
@@ -109,7 +117,7 @@ export default defineComponent({
     const confirmLoading = ref(false);
     const state = reactive({
       selectedRowKeys: [],
-      title:'新增类型',
+      title:'新增用户',
       spinning:true,
       data:[],
       key:0,
@@ -120,7 +128,8 @@ export default defineComponent({
       email: '',
       deptId:0,
       roleIdList:[],
-      password:''
+      password:'',
+      newPassword:''
     });
 
     //表格勾选
@@ -136,12 +145,11 @@ export default defineComponent({
       }
     };
     const edit = (column, text,record) => {
-      state.title = '编辑类型';
+      state.title = '编辑用户';
       formState.deptId = text.deptId;
       formState.username = text.username;
       formState.mobile = text.mobile;
       formState.email = text.email;
-      console.log(state.formState);
       visible.value = true;
     }
     const onFinish = values => {
@@ -157,29 +165,32 @@ export default defineComponent({
     //表单提交
     const handleOk =async () => {
       const values = await formRef.value.validateFields();
+      const {password,newPassword,...restParams} = values;
       confirmLoading.value = true;
       if(state.title=='新增类型'){
+        const {code,msg} = await userSave({password,...restParams});
+        if(!code)
         setTimeout(() => {
           visible.value = false;
-          //模拟add
-          state.data.push({...values,key:state.data.length+1,number:state.data.length+1});
-          console.log(state.data)
+          message.success(msg);
           confirmLoading.value = false;
-          message.success('Success');
+          queryList();
           resetForm();
-        }, 1000);
+        }, 500);
       }else{
         //修改
          setTimeout(async () => {
-          const {code} = await userUpdate(formState);
+          if(password && newPassword)
+          await userPassword({password,newPassword});
+          const {code,msg} = await userUpdate(restParams);
           if(!code){
             visible.value = false;
-            message.success('Success');
+            message.success(msg);
             queryList();
           }
           confirmLoading.value = false;
           resetForm();
-        }, 400);
+        }, 500);
       }
     };
     //表单取消
@@ -188,12 +199,14 @@ export default defineComponent({
       confirmLoading.value = false;
       resetForm();
     }
-    const confirmDel = text => {
+    const confirmDel =async text => {
       console.log(text);
-      setTimeout(() =>{
-        state.data = state.data.filter((item ,index)=>item.key != text.key);
-        message.success('删除成功');
-      },1000)
+      const {userId}=text;
+      const {code,msg} = await userDelete({userIds:userId});
+      if(!code){
+        message.success(msg);
+        queryList();
+      }
     };
     const cancelDel = e => {
       console.log(e);

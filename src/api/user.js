@@ -44,7 +44,7 @@ export function userPassword(data) {
 export function userSave(data) {
   return request({
     url:userApi.save,
-    method: 'GET',
+    method: 'POST',
     data
   })
 };

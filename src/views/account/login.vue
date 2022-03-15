@@ -2,8 +2,8 @@
 <template>
   <div class="login-container">
   <a-row style="width: 100%">
-      <a-col :span="18"></a-col>
-      <a-col :span="6">
+      <a-col :span="16"></a-col>
+      <a-col :span="8">
         <div class="login-container-form">
           <header>
             <!-- <img src="@/assets/images/logo.png" /> -->
@@ -46,8 +46,8 @@ import { message,notification } from "ant-design-vue";
 import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 import {getCode,Login} from "@/api/api";
-import {userInfo} from "@/api/user";
 import {timeFix} from "@/utils/time"
+import {userInfo} from "@/api/user";
 
 export default defineComponent({
   name: "Login",
@@ -166,7 +166,6 @@ export default defineComponent({
     width: 370px;
     box-sizing: border-box;
     border-radius: 6px;
-    width: 370px;
     padding: 16px 28px;
     // background: url("@/assets/images/login/login_form.png");
     // background-size: 100% 100%;

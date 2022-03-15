@@ -5,7 +5,7 @@
         <LayoutAside :collapsed="collapsed" />
       </a-layout-sider>
 
-      <a-layout>
+      <a-layout class="scrollRight" :style="{ overflowY: 'overlay', height: '100vh'}">
         <!-- header -->
         <a-layout-header class="headerStyle">
           <menu-unfold-outlined
@@ -40,7 +40,6 @@
             </template>
           </a-dropdown>
         </a-layout-header>
-
          <BreadCrumb />
         <!-- content -->
         <a-layout-content :style="{ height:'auto' }">
@@ -176,5 +175,27 @@ export default defineComponent({
 }
 .hidden:hover{
   overflow-y: overlay !important;
+}
+.scrollRight {
+  overflow: auto;
+  &::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track-piece {
+    background-color: #fff;
+  } /* 滚动条的内层滑轨背景颜色 */
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(144, 147, 153, 0.3);
+    border-radius: 2px;
+    box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
+  }/* 滚动条的内层滑块颜色 */
+  &::-webkit-scrollbar-track {
+    background-color: rgba(0, 0, 0, 0.05);
+  } /* 滚动条的外层滑轨背景颜色 */
+  & ::-webkit-scrollbar-button {
+    background-color: #fff;
+    display: none;
+  } /* 滑轨两头的监听按钮颜色 */
 }
 </style>

@@ -33,7 +33,7 @@
       </a-row>
     </div>
 
-    <a-card class="introduction">
+    <a-card class="introduction" v-for="(item,index) in [1,2,3,4,5]" :key="index">
       <h3>项目简介</h3>
       <p>
         <text>
