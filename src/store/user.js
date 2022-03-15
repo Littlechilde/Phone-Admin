@@ -5,7 +5,7 @@ const state = {
     roles: [],
     menus: [],
     userId:'',
-    username:localStorage.getItem('username')
+    username:localStorage.getItem('username') || 'admin'
 }
 
 const mutations = {

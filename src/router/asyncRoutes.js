@@ -99,7 +99,7 @@ export const asyncRoutes = [
     name: 'orderType',
     component: () => import('@/views/phoneOrderType/type.vue'),
     meta: {
-      title: '话单类型管理', // 名称
+      title: '话单（面试题）', // 名称
       auth: ['admin','user'], // 权限
       icon: 'icon-file-text',
     },

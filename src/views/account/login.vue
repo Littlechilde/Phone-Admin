@@ -92,7 +92,9 @@ export default defineComponent({
     const handleSubmit = async () => {
       await formRef.value.validateFields();
       state.loading=true;
-      const {code,data} = await Login(state.form);
+      // const {code,data} = await Login(state.form);
+      const code=0;
+      const data ="eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJleHAiOjE2NDc0OTg1MTAsInVzZXJJZCI6IjEiLCJ1c2VybmFtZSI6ImFkbWluIn0.ukfhgA6h0bTLxAguat45lXuXeYoBgyb-K3ejmbmrfGM"
         if (!code) {
           localStorage.setItem('token', data);
           /*解析token*/
@@ -105,7 +107,7 @@ export default defineComponent({
           // await userInfo({userId:userId})
           message.success("登录成功！");
           openNotificationWithIcon('success');
-          await store.dispatch("user/GetInfo", userId);
+          // await store.dispatch("user/GetInfo", userId);
           await store.dispatch('auth/routers', auth);
           router.replace(toPath).then(() => {
             if (route.name == "login") {

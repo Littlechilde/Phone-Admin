@@ -22,7 +22,7 @@
                 </template>
               </a-avatar>
               <a class="ant-dropdown-link" @click.prevent>
-                {{name}}
+                {{name || 'admin'}}
                 <DownOutlined />
               </a>
             </span>
