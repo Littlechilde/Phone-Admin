@@ -21,6 +21,7 @@ export const asyncRoutes = [
       icon: 'icon-USB',
       auth: ['admin', 'user'],
     },
+    redirect:'/404',
     component: () => import('@/layout/defaultRouter.vue'),
     children: [{
       path: "/404",
@@ -29,6 +30,7 @@ export const asyncRoutes = [
         title: "404",
         auth: ['admin', 'user'],
       },
+      redirect:'/404-2',
       component: () => import("@/views/errorPages/404.vue"),
       children: [{
           path: "/404-1",
@@ -96,10 +98,10 @@ export const asyncRoutes = [
   },
   {
     path: '/phoneType',
-    name: 'orderType',
+    name: 'phoneType',
     component: () => import('@/views/phoneOrderType/type.vue'),
     meta: {
-      title: '话单（面试题）', // 名称
+      title: '话单类型管理', // 名称
       auth: ['admin','user'], // 权限
       icon: 'icon-file-text',
     },

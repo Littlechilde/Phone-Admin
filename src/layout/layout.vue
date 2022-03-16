@@ -8,11 +8,7 @@
       <a-layout class="scrollRight" :style="{ overflowY: 'overlay', height: '100vh'}">
         <!-- header -->
         <a-layout-header class="headerStyle">
-          <menu-unfold-outlined
-            v-if="collapsed"
-            class="trigger"
-            @click="() => (collapsed = !collapsed)"
-          />
+          <menu-unfold-outlined v-if="collapsed" class="trigger" @click="openAside"/>
           <menu-fold-outlined v-else class="trigger" @click="() => (collapsed = !collapsed)" />
           <a-dropdown class="down">
             <span class="user">
@@ -22,7 +18,7 @@
                 </template>
               </a-avatar>
               <a class="ant-dropdown-link" @click.prevent>
-                {{name || 'admin'}}
+                {{name || 'user'}}
                 <DownOutlined />
               </a>
             </span>
@@ -40,7 +36,7 @@
             </template>
           </a-dropdown>
         </a-layout-header>
-         <BreadCrumb />
+         <BreadCrumb :collapsed="collapsed"/>
         <!-- content -->
         <a-layout-content :style="{ height:'auto' }">
              <router-view :style="{ background: '#fff',margin: '24px 16px', padding: '24px'}"/>
@@ -79,6 +75,8 @@ export default defineComponent({
     const store = useStore();
     const router = useRouter();
     const name = computed(()=> store.state.user.username);
+    const collapsed = ref(false);
+    //注销登录
     const loginOut = ()=>{
        Modal.confirm({
         title: '你确定注销吗?',
@@ -100,9 +98,17 @@ export default defineComponent({
         class: 'test',
       });
     };
+    //折叠打开
+    const openAside=()=>{
+        collapsed.value = !collapsed;
+        const keys = JSON.parse(localStorage.getItem("openKeys"));
+        if(keys.length)
+        store.commit('user/SET_KEYS', keys);
+    };
     return {
-      collapsed: ref(false),
+      collapsed,
       loginOut,
+      openAside,
       name
     };
   },
@@ -165,7 +171,8 @@ export default defineComponent({
     // box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
   }
   &::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.05);
+    // background-color: rgba(0, 0, 0, 0.05);
+    background-color: transparent;
   }
     box-shadow: 2px 0 6px rgb(0 21 41 / 35%);
     z-index: 101;
@@ -177,21 +184,22 @@ export default defineComponent({
   overflow-y: overlay !important;
 }
 .scrollRight {
-  overflow: auto;
+  overflow-y: overlay;
   &::-webkit-scrollbar {
     width: 6px;
     border-radius: 3px;
   }
   &::-webkit-scrollbar-track-piece {
-    background-color: #fff;
+    // background-color: #fff;
+    background-color: transparent;
   } /* 滚动条的内层滑轨背景颜色 */
   &::-webkit-scrollbar-thumb {
-    background-color: rgba(144, 147, 153, 0.3);
+    background-color: rgba(144, 147, 153, 0.5);
     border-radius: 2px;
-    box-shadow: inset 0 0 6px rgb(0 0 0 / 20%);
   }/* 滚动条的内层滑块颜色 */
   &::-webkit-scrollbar-track {
-    background-color: rgba(0, 0, 0, 0.05);
+    // background-color: rgba(0, 0, 0, 0.05);
+    background-color: transparent;
   } /* 滚动条的外层滑轨背景颜色 */
   & ::-webkit-scrollbar-button {
     background-color: #fff;

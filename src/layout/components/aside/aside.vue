@@ -34,15 +34,23 @@ export default {
         default: false
     }
   },
-  setup () {
+  setup (props) {
     // 路由
     const router = useRouter();
     const route = useRoute();
     const store = useStore();
     const menuList = computed(()=> store.state.auth.menuList);
-    const getMenu =reactive({
-       openKeys: localStorage.getItem("openKeys") ? JSON.parse(localStorage.getItem("openKeys")): [],
+    const openKeys = computed({
+      get() {
+        return store.state.user.openKeys
+      },
+      set(value) {
+        store.commit('user/SET_KEYS', value)
+      }
     });
+    // const getMenu =reactive({
+    //    openKeys: localStorage.getItem("openKeys") ? JSON.parse(localStorage.getItem("openKeys")): [],
+    // });
     //检测路由变化的菜单选择
     let selectedKeys = ref([]);
     watch(() => route.path,() => {
@@ -61,7 +69,7 @@ export default {
     };
     //菜单折叠事件
     const openChange=(openKeys)=>{
-      getMenu.openKeys = openKeys;
+      // getMenu.openKeys = openKeys;
       localStorage.setItem("openKeys", JSON.stringify(openKeys)); // 设置
     }
     //路由跳转
@@ -74,8 +82,9 @@ export default {
     return {
       menuList,
       selectedKeys,
+      openKeys,
       hasOnlyChildren,
-      ...toRefs(getMenu),
+      // ...toRefs(getMenu),
       selectMenu,
       clickMenuItem,
       openChange

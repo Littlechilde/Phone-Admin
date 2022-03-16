@@ -3,7 +3,7 @@ import router, { asyncRoutes } from '../router';
 
 const state = {
     roles: [],
-    menus: [],
+    openKeys:JSON.parse(localStorage.getItem("openKeys")),
     userId:'',
     username:localStorage.getItem('username') || 'admin'
 }
@@ -15,8 +15,8 @@ const mutations = {
     SET_USERNAME: (state, name) => {
         state.username = name
     },
-    SET_MENUS: (state, menus) => {
-        state.menus = menus
+    SET_KEYS: (state, openKeys) => {
+        state.openKeys = openKeys
     }
 }
 
