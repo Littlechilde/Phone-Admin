@@ -3,7 +3,7 @@ import router, { asyncRoutes } from '../router';
 
 const state = {
     roles: [],
-    openKeys:JSON.parse(localStorage.getItem("openKeys")),
+    openKeys:JSON.parse(localStorage.getItem("openKeys")) || [],
     userId:'',
     username:localStorage.getItem('username') || 'admin'
 }

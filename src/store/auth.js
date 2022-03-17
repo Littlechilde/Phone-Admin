@@ -2,7 +2,7 @@ import router, { constantRoutes, asyncRoutes } from '../router';
 
 //初始化数据
 const state = {
-  auth: localStorage.getItem('token') || '',
+  auth:'admin',
   menuList: [],
 };
 //响应组件中操作
