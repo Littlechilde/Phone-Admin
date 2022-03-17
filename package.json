@@ -10,12 +10,14 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "add": "^2.0.6",
     "ant-design-vue": "^3.1.0-rc.0",
     "axios": "^0.26.0",
+    "global": "^4.4.0",
     "less": "^4.1.2",
     "mockjs": "^1.1.0",
     "nprogress": "^0.2.0",
-    "vue": "^3.2.25",
+    "vue": "^3.2.31",
     "vue-router": "^4.0.12",
     "vuex": "^4.0.2"
   },
