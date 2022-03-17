@@ -15,7 +15,7 @@ export const asyncRoutes = [
   {
     path: '/area',
     name: 'area',
-    hidden: true,
+    hidden: false,
     meta: {
       title: '三级菜单测试页',
       icon: 'icon-USB',
@@ -37,7 +37,7 @@ export const asyncRoutes = [
           name: "404-1",
           meta: {
             title: "404子",
-            auth: ['user'],
+            auth: ['admin','user'],
           },
           component: () => import("@/views/errorPages/404-1/404-1.vue"),
         },

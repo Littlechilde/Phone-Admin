@@ -51,13 +51,28 @@ export default  defineComponent({
   //点击折叠事件
   function filterSon(route,paths){
      if(route.children && paths.length > 0){
-      const keys = JSON.parse(localStorage.getItem("openKeys"));
+      let keys = JSON.parse(localStorage.getItem("openKeys"));
       if(!keys.includes(route.path)){
         keys.push(route.path);
-        for(let i in route.children){
+        /*三级菜单：枚举*/
+        /*for(let i in route.children){
           if(route.children[i].children){
-            if(route.children[i].path==route.redirect)
+            if(route.children[i].path==route.redirect){
+              keys.push(route.redirect);
+              break;
+            }
+          }
+        }*/
+        /**递归 ,无限层*/
+        for(const i in route.children){
+          if(route.children[i].children){
             keys.push(route.redirect);
+            const array=filterChild(route.children);
+            /**转化为一维数组 */
+            const arrayKeys= flatten(array).filter(i=>i !=undefined);
+            console.log(arrayKeys);
+            arrayKeys.pop();
+            keys=distinct(keys.concat(arrayKeys),[]);
             break;
           }
         }
@@ -66,9 +81,27 @@ export default  defineComponent({
         localStorage.setItem("openKeys",JSON.stringify(keys));
       }
     }
-  }
+  };
+ const flatten=(arr)=> { return [].concat( ...arr.map(x => Array.isArray(x) ? flatten(x) : x) ) };
+//  ES6 新增了 Set 这一数据结构，类似于数组，但 Set 的成员具有唯一性基于这一特性，就非常适合用来做数组去重了
+ const distinct = (a, b)=> {
+    return Array.from(new Set([...a, ...b]))
+ }
+ /**递归redirect */
+ function filterChild(route){
+   const result =[];
+   for(const i in route){
+    result.push(route[i].redirect);
+    if(route[i].children){
+      const child = filterChild(route[i].children)
+      result.push(child);
+    }
+   }
+   return result
+ }
   //跳转
   function toPath(route,paths){
+    console.log(route)
     router.push(route.path);
     filterSon(route,paths);
   }
