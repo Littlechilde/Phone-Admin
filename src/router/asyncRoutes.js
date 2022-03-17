@@ -15,7 +15,7 @@ export const asyncRoutes = [
   {
     path: '/area',
     name: 'area',
-    hidden: false,
+    hidden: true,
     meta: {
       title: '三级菜单测试页',
       icon: 'icon-USB',

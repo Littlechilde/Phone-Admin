@@ -102,7 +102,7 @@ export default defineComponent({
           const toPath = decodeURIComponent(route.query?.redirect || "/"); //获取登录成功后要跳转的路由。
           const auth = username;
           /* 获取用户信息、身份 */
-          // await userInfo({userId:userId})
+          await userInfo({userId:userId})
           message.success("登录成功！");
           openNotificationWithIcon('success');
           await store.dispatch("user/GetInfo", userId);
