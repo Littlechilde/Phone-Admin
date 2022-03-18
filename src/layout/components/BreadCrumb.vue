@@ -51,7 +51,7 @@ export default  defineComponent({
   //点击折叠事件
   function filterSon(route,paths){
      if(route.children && paths.length > 0){
-      let keys = JSON.parse(localStorage.getItem("openKeys"));
+      let keys = JSON.parse(localStorage.getItem("openKeys")) || [];
       if(!keys.includes(route.path)){
         keys.push(route.path);
         /*三级菜单：枚举*/
@@ -76,7 +76,7 @@ export default  defineComponent({
             break;
           }
         }
-        if(!props.collapsed)
+        // if(!props.collapsed)
         store.commit('user/SET_KEYS', keys);
         localStorage.setItem("openKeys",JSON.stringify(keys));
       }

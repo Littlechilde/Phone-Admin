@@ -32,7 +32,7 @@
             </a-form-item>
           </a-form>
               <a-button type="primary"  @click="handleSubmit" block :loading="loading">登录</a-button>
-              <a-button  @click="handleReset" style="margin-top:16px;margin-bottom: 24px;width: 100%;">重置</a-button>
+              <a-button  @click="handleReset" :disabled="!loading" style="margin-top:16px;margin-bottom: 24px;width: 100%;">重置</a-button>
         </div>
       </a-col>
     </a-row>
