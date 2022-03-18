@@ -44,11 +44,11 @@ service.interceptors.response.use(
     const { response } = error;
     const { status, data } = response;
     if (status == 500 && data.message == '权限不足') {
-      localStorage.clear();
       message.error(data.message);
+      localStorage.clear();
       setTimeout(() => {
-        router.replace('/login');
-      }, 1000)
+        router.replace('Login');
+      }, 1500)
     } else if (status == 500) {
       setTimeout(() => {
         router.push('noServe');

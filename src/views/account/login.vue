@@ -32,7 +32,7 @@
             </a-form-item>
           </a-form>
               <a-button type="primary"  @click="handleSubmit" block :loading="loading">登录</a-button>
-              <a-button  @click="handleReset" :disabled="!loading" style="margin-top:16px;margin-bottom: 24px;width: 100%;">重置</a-button>
+              <a-button  @click="handleReset" :disabled="loading" style="margin-top:16px;margin-bottom: 24px;width: 100%;">重置</a-button>
         </div>
       </a-col>
     </a-row>
@@ -102,9 +102,7 @@ export default defineComponent({
           const toPath = decodeURIComponent(route.query?.redirect || "/"); //获取登录成功后要跳转的路由。
           const auth = username;
           /* 获取用户信息、身份 */
-          await userInfo({userId:userId})
-          message.success("登录成功！");
-          openNotificationWithIcon('success');
+          await userInfo({userId:userId});
           await store.dispatch("user/GetInfo", userId);
           await store.dispatch('auth/routers', auth);
           router.replace(toPath).then(() => {
@@ -112,8 +110,11 @@ export default defineComponent({
               router.replace("/dashboard");
             }
           });
+          message.success("登录成功！");
+          openNotificationWithIcon('success');
         } else {
           console.error('error')
+          message.error("登录失败，请重试！");
         }
        state.loading=false;
     };
