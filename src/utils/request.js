@@ -1,14 +1,13 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
-import { useRouter } from "vue-router";
+import router from '@/router';
 
-export const VITE_BASE_URL ='http://119.23.247.196:8031';
-
+export const VITE_BASE_URL = 'http://119.23.247.196:8031';
 const service = axios.create({
-  baseURL:VITE_BASE_URL,
+  baseURL: VITE_BASE_URL,
   withCredentials: true, // send cookies when cross-domain requests
   timeout: 15000,
-  headers: {'content-type': 'application/json'}
+  headers: { 'content-type': 'application/json' }
 });
 // 添加请求拦截器
 service.interceptors.request.use(
@@ -32,9 +31,9 @@ service.interceptors.response.use(
   // 对响应数据做点什么
   // 2xx 范围内的状态码都会触发该函数。
   response => {
-    const {data} = response;
-    const {code}= data;
-    if(code && code !== 200) {
+    const { data } = response;
+    const { code } = data;
+    if (code && code !== 200) {
       message.error(data.message)
     }
     return data
@@ -42,27 +41,26 @@ service.interceptors.response.use(
   // 对响应错误做点什么
   // 超出 2xx 范围的状态码都会触发该函数。
   error => {
-    const {response} = error;
-    const {status,data} = response;
-    const router = useRouter();
-    if(status == 500 && data.message == '权限不足'){
+    const { response } = error;
+    const { status, data } = response;
+    if (status == 500 && data.message == '权限不足') {
       localStorage.clear();
       message.error(data.message);
-      setTimeout(()=>{
+      setTimeout(() => {
         router.replace('/login');
-      },1000)
-    }else if(status==500){
-      setTimeout(()=>{
+      }, 1000)
+    } else if (status == 500) {
+      setTimeout(() => {
         router.push('noServe');
-      },1000);
-    }else if (status== 404){
-      setTimeout(()=>{
+      }, 1000);
+    } else if (status == 404) {
+      setTimeout(() => {
         router.push('NotFound');
-      },1000)
-    }else if (status==403){
-      setTimeout(()=>{
+      }, 1000)
+    } else if (status == 403) {
+      setTimeout(() => {
         router.push('noPower');
-      },1000)
+      }, 1000)
     }
     return Promise.reject(error)
   }
