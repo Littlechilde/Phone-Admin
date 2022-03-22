@@ -82,6 +82,15 @@ export const asyncRoutes = [
         auth: ['admin', 'user'],
       },
       component: () => import("@/views/systemManage/role.vue"),
+    },
+    {
+      path: "/menus",
+      name: "menus",
+      meta: {
+        title: "菜单管理",
+        auth: ['admin', 'user'],
+      },
+      component: () => import("@/views/systemManage/menu.vue"),
     }
   ]
   },

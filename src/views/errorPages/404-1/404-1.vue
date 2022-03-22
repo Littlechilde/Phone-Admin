@@ -1,49 +1,108 @@
 <template>
-  <div id="components-grid-demo-flex">
-    <p>sub-element align left</p>
-    <a-row type="flex" justify="start">
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-    </a-row>
+  <a-table :columns="columns" :data-source="data" @resizeColumn="handleResizeColumn">
+    <template #headerCell="{ column }">
+      <template v-if="column.key === 'name'">
+        <span>
+          <smile-outlined />
+          Name
+        </span>
+      </template>
+    </template>
 
-    <p>sub-element align center</p>
-    <a-row type="flex" justify="center">
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-    </a-row>
-
-    <p>sub-element align right</p>
-    <a-row type="flex" justify="end">
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-    </a-row>
-
-    <p>sub-element monospaced arrangement</p>
-    <a-row type="flex" justify="space-between">
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-    </a-row>
-
-    <p>sub-element align full</p>
-    <a-row type="flex" justify="space-around">
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-      <a-col :span="4">col-4</a-col>
-    </a-row>
-  </div>
+    <template #bodyCell="{ column, record }">
+      <template v-if="column.key === 'name'">
+        <a>
+          {{ record.name }}
+        </a>
+      </template>
+      <template v-else-if="column.key === 'tags'">
+        <span>
+          <a-tag
+            v-for="tag in record.tags"
+            :key="tag"
+            :color="tag === 'loser' ? 'volcano' : tag.length > 5 ? 'geekblue' : 'green'"
+          >
+            {{ tag.toUpperCase() }}
+          </a-tag>
+        </span>
+      </template>
+      <template v-else-if="column.key === 'action'">
+        <span>
+          <a>Invite 一 {{ record.name }}</a>
+          <a-divider type="vertical" />
+          <a>Delete</a>
+          <a-divider type="vertical" />
+          <a class="ant-dropdown-link">
+            More actions
+            <down-outlined />
+          </a>
+        </span>
+      </template>
+    </template>
+  </a-table>
 </template>
+<script>
+import { SmileOutlined, DownOutlined } from '@ant-design/icons-vue';
+import { defineComponent, ref } from 'vue';
+const data = [{
+  key: '1',
+  name: 'John Brown',
+  age: 32,
+  address: 'New York No. 1 Lake Park',
+  tags: ['nice', 'developer'],
+}, {
+  key: '2',
+  name: 'Jim Green',
+  age: 42,
+  address: 'London No. 1 Lake Park',
+  tags: ['loser'],
+}, {
+  key: '3',
+  name: 'Joe Black',
+  age: 32,
+  address: 'Sidney No. 1 Lake Park',
+  tags: ['cool', 'teacher'],
+}];
+export default defineComponent({
+  components: {
+    SmileOutlined,
+    DownOutlined,
+  },
 
-<style lang="less" scoped>
-#components-grid-demo-flex :deep(.ant-row) {
-  background: rgba(128, 128, 128, 0.08);
-}
-</style>
+  setup() {
+    const columns = ref([{
+      dataIndex: 'name',
+      key: 'name',
+      resizable: true,
+      width: 150,
+    }, {
+      title: 'Age',
+      dataIndex: 'age',
+      key: 'age',
+      resizable: true,
+      width: 100,
+      minWidth: 100,
+      maxWidth: 200,
+    }, {
+      title: 'Address',
+      dataIndex: 'address',
+      key: 'address',
+    }, {
+      title: 'Tags',
+      key: 'tags',
+      dataIndex: 'tags',
+    }, {
+      title: 'Action',
+      key: 'action',
+    }]);
+    return {
+      data,
+      columns,
+      handleResizeColumn: (w, col) => {
+        col.width = w;
+      },
+    };
+  },
+
+});
+</script>

@@ -175,7 +175,16 @@ Mock.mock(
         address: "长沙市岳麓区梅溪湖",
         user:'小贺',
         phone: "17135367892",
-        checked: true
+        checked: true,
+        children: [{
+          number: '12',
+          key:'25',
+          name: '贺老板',
+          address: "湘潭市东湖路工程学院北",
+          user:'小贺',
+          phone: "17123334441",
+          checked: false,
+        }]
       }, {
         number: '2',
         key:'2',

@@ -75,7 +75,9 @@ const columns = ref([{
   title: '序号',
   dataIndex: 'number',
   key: 'number',
-   resizable: true,
+  resizable: true,
+  minWidth: 100,
+  maxWidth: 200,
   width: 100
 }, {
   title: '客户名称',
@@ -91,6 +93,7 @@ const columns = ref([{
   resizable: true,
   width: 300,
   minWidth: 350,
+  maxWidth:500,
   key: 'address',
   ellipsis: true,
 },

@@ -13,8 +13,8 @@ const actions = {
       //角色筛选
       const authRoutes = traversalRoutes(asyncRoutes, auth);
       layout.children = [...authRoutes];
-      commit('GENERATE_ROUTES', authRoutes);
       constantRoutes.forEach((r) => router.addRoute(r));
+      commit('GENERATE_ROUTES', authRoutes);
       resolve();
     })
   }
