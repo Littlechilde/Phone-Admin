@@ -34,16 +34,16 @@
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
         <a-form-item label="部门ID" name="deptId" :rules="[{ required: true, message: '请输入部门ID' }]">
-          <a-input v-model:value="formState.deptId" placeholder="请输入部门ID"/>
+          <a-input v-model:value="formState.deptId" placeholder="请输入部门ID" allowClear/>
         </a-form-item>
         <a-form-item label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
-          <a-input v-model:value="formState.username" placeholder="请输入用户名"/>
+          <a-input v-model:value="formState.username" placeholder="请输入用户名" allowClear/>
         </a-form-item>
-        <a-form-item label="手机号" name="mobile" :rules="[{ required: true, message: '请输入手机号' }]">
-          <a-input v-model:value="formState.mobile" placeholder="请输入手机号码"/>
+        <a-form-item label="手机号" name="mobile" :rules="[{ required: true, message: '请输入正确的手机号',pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,trigger: 'blur',max:11 }]">
+          <a-input v-model:value="formState.mobile" :maxlength="11" placeholder="请输入手机号码" allowClear/>
         </a-form-item>
-        <a-form-item label="邮箱" name="email" :rules="[{ required: true, message: '请输入邮箱' }]">
-          <a-input v-model:value="formState.email"  placeholder="请输入邮箱"/>
+        <a-form-item label="邮箱" name="email" :rules="[{ required: true, message: '请输入正确的邮箱',type: 'email' }]">
+          <a-input v-model:value="formState.email"  placeholder="请输入邮箱" allowClear/>
         </a-form-item>
         <a-form-item :label="title=='编辑用户' ?'原密码':'密码'" name="password" :rules="[{ required: title=='编辑用户' ? false:true, message: '请输入密码' }]">
           <a-input-password v-model:value="formState.password" placeholder="请输入密码" />
