@@ -6,7 +6,7 @@
         <a-space :size="16" align="center">
           <a-button type="primary" @click="showModal">新增同级</a-button>
           <a-button @click="showModal({child:true})" type="primary" danger>新增子级</a-button>
-          <!-- <a-button type="primary" danger>批量删除</a-button> -->
+          <a-button danger @click="cleanAll">批量删除</a-button>
         </a-space>
       </a-col>
     </a-row>
@@ -58,9 +58,9 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs,toRef,onMounted,toRaw} from 'vue';
-import { DownOutlined,DeleteOutlined,FormOutlined } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+import { defineComponent, ref, reactive, toRefs,toRef,onMounted,toRaw,createVNode} from 'vue';
+import { DownOutlined,DeleteOutlined,FormOutlined,ExclamationCircleOutlined  } from '@ant-design/icons-vue';
+import { message,Modal  } from 'ant-design-vue';
 import {formatTree} from '@/utils/formatTree';
 
 import {getCallType} from '@/api/api';
@@ -131,6 +131,43 @@ export default defineComponent({
       state.selectedRowKeys = selectedRowKeys;
       state.selectedRows=selectedRows;
     };
+    //批量删除
+    const cleanAll=()=>{
+      if(!state.selectedRowKeys.length){
+        message.error('请勾选需要批量删除的列表！')
+      }else{
+        Modal.confirm({
+        title: '你确定要删除以下内容吗?',
+        icon: createVNode(ExclamationCircleOutlined),
+        content: '删除后不可恢复',
+        okText: '确定',
+        okType: 'danger',
+        cancelText: '取消',
+        async onOk() {
+           state.spinning =true;
+           try {
+            return await new Promise((resolve, reject) => {
+              const keys=state.selectedRowKeys.map(item=>{return {key:item}});
+              state.dataOriginal.map(item=>{ if(item.children && item.children.length>0) delete item.children});
+              const result = state.dataOriginal.filter(item => keys.every(subItem => subItem.key !== item.key));//差集
+              state.dataOriginal = result;
+              state.data = formatTree(result,'menuId','parentId','children',0);
+              setTimeout(()=>{
+                message.success('删除成功');
+                state.spinning =false;
+                resolve();
+              },500)
+            });
+          } catch {
+            return console.log('Oops errors!');
+          }
+        },
+        onCancel() {
+          console.log('Cancel');
+        },
+      });
+      }
+    };
     const showModal = ({child}) => {
       if(child) state.title = '新增子级';
       else state.title = '新增同级';
@@ -162,6 +199,7 @@ export default defineComponent({
       const values = await formRef.value.validateFields();
       const {dataOriginal,title} = state; 
       confirmLoading.value = true;
+      state.spinning =true;
       if(title=='新增同级'){
         setTimeout(() => {
           //模拟add
@@ -169,8 +207,7 @@ export default defineComponent({
             const {selectedRows:[{parentId,parentName}]} = state;
             dataOriginal.push({...values,parentId,parentName,key:dataOriginal.length+1,menuId:dataOriginal.length+1});
           }else{
-            const parentId = 0;
-            const parentName="";
+            const parentId = 0,parentName="";
             dataOriginal.push({...values,parentId,parentName,key:dataOriginal.length+1,menuId:dataOriginal.length+1});
           }
           state.data=formatTree(dataOriginal,'menuId','parentId','children',0);
@@ -202,6 +239,7 @@ export default defineComponent({
           resetForm();
         }, 1000);
       }
+      state.spinning =false;
     };
     //表单取消
     const cancel=() => {
@@ -256,6 +294,7 @@ export default defineComponent({
       formState,
       formRef,
       onFinish,
+      cleanAll,
       onSelectChange,
       onFinishFailed,
       showModal,
