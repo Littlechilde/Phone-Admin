@@ -4,7 +4,7 @@ export function formatTree(data,id='id',pid='parentId',child ='children',root){
     data.forEach(item=>{
       if(item[pid] == root){
         const children = formatTree(data,id,pid,child,item[id]);
-        if(children &&children.length){
+        if(children &&children.length >0){
           item[child] = children;
         }
         tree.push(item);

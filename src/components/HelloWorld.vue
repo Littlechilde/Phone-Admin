@@ -3,17 +3,18 @@
    组件{{count}} +++ {{count1}} ++
    <a @click="fan">fan</a>
 
-   <a @click="fan3">fan3 + {{a}}</a>
+   <a @click="fan3">fan3 + {{a}} {{shy}}</a>
   </div>
 </template>
 
 <script>
-import { reactive, toRefs } from 'vue'
+import { reactive, toRefs,toRaw } from 'vue'
 
 export default {
   setup () {
     let state = reactive({
       count: 0,
+      shy:[{a:1},{a:2}],
       a:{
        b:1 
       }
@@ -31,6 +32,10 @@ export default {
   }
   const fan3=()=>{
     state.count = 4 //类似于const的修改
+    // let {shy} = state
+    const d = toRaw(state.shy)
+    state.shy= d.filter(item=>item.a !=2)
+    console.log(state.shy,d)
     state.a={}
   }
     return {

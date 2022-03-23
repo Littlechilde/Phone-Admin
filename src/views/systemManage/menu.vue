@@ -3,8 +3,10 @@
     <!-- 操作项 -->
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
-        <a-button type="primary" @click="showModal">新增</a-button>
-        <a-button type="primary" style="margin-left: 16px;" danger>批量删除</a-button>
+        <a-space :size="16" align="center">
+          <a-button type="primary" @click="showModal">新增</a-button>
+          <a-button type="primary" danger>批量删除</a-button>
+        </a-space>
       </a-col>
     </a-row>
     <!-- table开始 -->
@@ -18,8 +20,8 @@
            <template v-if="column.dataIndex === 'type'">
             <a-tag :color="text ? (text==1 ? 'pink' : 'orange') : 'purple'">{{text ? (text==1 ? '菜单' : '按钮') : '目录'}}</a-tag>
           </template>
-          <template v-if="column.dataIndex === 'checked'">
-            <a-switch v-model:checked="record.checked" disabled/>
+          <template v-if="column.dataIndex === 'icon'">
+            <icon-font :type="record.icon" v-if="record.icon" :style="{fontSize:'20px'}"></icon-font>
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
@@ -51,7 +53,7 @@
           <a-select style="width: 100%"  placeholder="请选择上级菜单" v-model:value="formState.parentId"  @focus="handleFocus" @change="handleChange" v-if="formState.type == 1" :disabled="disabled">
             <a-select-option :value="item.menuId" v-for="item in data" :key="item.menuId">{{ item.name }}</a-select-option>
           </a-select>
-
+          <!-- 二级菜单 -->
           <a-select style="width: 100%" @change="handleChange" v-model:value="formState.parentId" placeholder="请选择上级菜单" v-else :disabled="disabled">
             <a-select-opt-group :label="item.name" v-for="item in data" :key="item.menuId">
               <a-select-option :value="i.menuId" v-for="i in item.children" :key="i.menuId">{{i.name}}</a-select-option>
@@ -75,6 +77,7 @@
 <script>
 import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
 import { DownOutlined  } from '@ant-design/icons-vue';
+import IconFont from "@/assets/iconFont/icon";
 import { message } from 'ant-design-vue';
 
 // import {getUserList} from '@/api/api';
@@ -101,9 +104,9 @@ const columns = ref([{
   dataIndex: 'name',
   key: 'name',
   resizable: true,
-  width: 100,
+  width: 150,
   minWidth: 100,
-  maxWidth: 200,
+  maxWidth: 300,
 }, {
   title: '上级菜单',
   dataIndex: 'parentName',
@@ -148,6 +151,7 @@ const columns = ref([{
 export default defineComponent({
   components: {
     DownOutlined,
+    IconFont
   },
   setup() {
     const formRef = ref();

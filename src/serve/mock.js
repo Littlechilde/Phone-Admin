@@ -59,27 +59,44 @@ Mock.mock(
     return {
       code: 200,
       data: [{
-        number: '1',
-        key:'1',
-        callType: '市话',
-        describe: 32,
-        address: 'New York No. 1 Lake Park',
-        tags: ['nice', 'developer'],
+        "icon": "",
+        "list": [],
+        "menuId": 1,
+        "name": "研发部",
+        "open": true,
+        "orderNum": 0,
+        "parentId": 0,
+        "parentName": "",
+        "describe": "研发部mark研发部mark",
+        "type": 0,
+        "url": ""
       }, {
-        number: '2',
-        key:'2',
-        callType: '长途',
-        describe: 42,
-        address: 'London No. 1 Lake Park',
-        tags: ['loser'],
-      }, {
-        number: '3',
-        key:'3',
-        callType: '长途',
-        describe: 32,
-        address: 'Sidney No. 1 Lake Park',
-        tags: ['cool', 'teacher'],
-      }]
+        "icon": "",
+        "list": [],
+        "menuId": 2,
+        "name": "东湖路工程学院保卫处",
+        "open": true,
+        "orderNum": 0,
+        "parentId": 0,
+        "parentName": "",
+        "describe": "此处为mockjs数据，类似接口加载",
+        "type": 0,
+        "url": "tree"
+      },
+      {
+        "icon": "",
+        "list": [],
+        "menuId": 3,
+        "name": "湘大生活部",
+        "open": true,
+        "orderNum": 0,
+        "parentId": 1,
+        "parentName": "研发部",
+        "describe": "未借助浏览器缓存",
+        "type": 0,
+        "url": ""
+      }
+    ]
     }
   }
 )
