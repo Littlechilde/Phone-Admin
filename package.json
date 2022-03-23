@@ -3,7 +3,10 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "dev": "vite",
+    "dev": "vite --mode development",
+    "test": "vite  --mode testing",
+    "prod": "vite  --mode production",
+    "serve": "vite preview",
     "build": "vite build",
     "dev:mock": "cross-env USE_MOCK=true vite",
     "build:mock": "cross-env USE_CHUNK_MOCK=true vite build",

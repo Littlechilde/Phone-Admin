@@ -1,6 +1,7 @@
 import Mock from 'mockjs'
+const { VITE_BASE_URL } = import.meta.env
 
-const baseURL = 'http://119.23.247.196:8031';
+const baseURL = VITE_BASE_URL;
 const systemApi = {
   login: baseURL + "/user/login",
   role: baseURL + '/getRole',

@@ -1,8 +1,8 @@
 import axios from 'axios';
 import { message } from 'ant-design-vue';
 import router from '@/router';
-
-export const VITE_BASE_URL = 'http://119.23.247.196:8031';
+const { VITE_BASE_URL, VITE_LOCAL_TEST_URL, VITE_MODE } = import.meta.env
+// export const VITE_BASE_URL = 'http://119.23.247.196:8031';
 const service = axios.create({
   baseURL: VITE_BASE_URL,
   withCredentials: true, // send cookies when cross-domain requests
