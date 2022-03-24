@@ -3,7 +3,7 @@
 - vue3.2
 - vuex 4.x
 - axios
-- ant vue design@3.0.0beta
+- ant vue design@3.1.2beta
 - vue-router
 - mock.js
 vite-plugin-mock
@@ -12,7 +12,7 @@ vite-plugin-mock
 - iconfont
 less支持
 
-- 菜单权限；
+- 菜单权限、按钮权限；
 layout布局;
 
 语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html

@@ -25,7 +25,7 @@
               </a-input-password>
             </a-form-item>
             <a-form-item name="captcha"  :rules="[{ required: true, message: '请输入验证码' }]" class="codeFlex">
-              <a-input v-model:value="form.captcha" size="large" placeholder="请输入验证码"></a-input>
+              <a-input v-model:value="form.captcha" size="large" placeholder="请输入验证码" @pressEnter="handleSubmit"></a-input>
               <aside style="width:200px;margin-left: 20px;cursor:pointer" @click="code">
                 <img :src="codeSrc" style="width:100%;"  mode="widthFixed"/>
               </aside>
