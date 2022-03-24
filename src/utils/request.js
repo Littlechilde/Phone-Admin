@@ -33,8 +33,8 @@ service.interceptors.response.use(
   response => {
     const { data } = response;
     const { code } = data;
-    if (code && code !== 200) {
-      message.error(data.message)
+    if (code==-1) {
+      message.error(data.message || data.msg + ': ' + data.data)
     }
     return data
   },

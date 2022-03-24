@@ -114,7 +114,6 @@ export default defineComponent({
           openNotificationWithIcon('success');
         } else {
           console.error('error')
-          message.error("登录失败，请重试！");
         }
        state.loading=false;
     };
