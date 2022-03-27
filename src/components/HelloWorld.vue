@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-buttonPromise="'import'">
    组件{{count}} +++ {{count1}} ++
    <a @click="fan">fan</a>
 
