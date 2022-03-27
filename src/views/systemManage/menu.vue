@@ -226,30 +226,24 @@ export default defineComponent({
       state.title = '新增菜单';
       visible.value = true;
       state.disabled = false;
-      formState.name='';
-      formState.url = '';
-      formState.perms='';
-      formState.icon='';
-      formState.parentId = 0;
-      formState.type = 0;
-      formState.hidden =false;
-      formState.redirect="";
-      formState.routerName='';
-      formState.component="";
+      for(let i in formState){
+        if(i == 'parentId'){
+          formState[i] = 0
+        }else if(i == 'type'){
+          formState[i] = 0
+        }else if(i == 'hidden'){
+          formState[i] = false;
+        }else{
+          formState[i] = '';
+        }
+      }
     };
     const edit = (text) => {
       state.title = '编辑菜单';
-      formState.name=text.name;
-      formState.url = text.url;
-      formState.perms=text.perms ? text.perms.toString() : '';
-      formState.icon=text.icon;
-      formState.parentId = text.parentId;
-      formState.type = text.type;
-      formState.menuId = text.menuId;
-      formState.hidden =text.hidden;
-      formState.redirect=text.redirect;
-      formState.routerName=text.routerName;
-      formState.component=text.component;
+      for(let i in formState){
+        if(i == 'perms') formState[i] =text[i] ? text[i].toString():'';
+        else formState[i] = text[i];
+      };
       state.disabled = true;
       visible.value = true;
     }

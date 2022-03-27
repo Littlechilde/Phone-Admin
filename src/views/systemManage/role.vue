@@ -46,7 +46,7 @@
             <a-radio value="3">部门用户</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="部门名称" name="deptName" :rules="[{ required: true, message: '请选择部门' }]">
+        <a-form-item label="部门名称" name="deptId" :rules="[{ required: true, message: '请选择部门' }]">
            <a-tree-select
             v-model:value="formState.deptId"
             style="width: 100%"
@@ -75,7 +75,7 @@
             <a-tree
               v-model:expandedKeys="expandedKeys"
               v-model:selectedKeys="selectedKeys"
-              v-model:checkedKeys="checkedKeys"
+              v-model:checkedKeys="formState.menuIdList"
               checkable
               :tree-data="treeData"
               :field-names="{
@@ -97,7 +97,7 @@
               <a-tree
               v-model:expandedKeys="expandedKeysDepths"
               v-model:selectedKeys="selectedKeysDepths"
-              v-model:checkedKeys="checkedKeysDepths"
+              v-model:checkedKeys="formState.deptIdList"
               checkable
               :tree-data="deptList"
               :field-names="{
@@ -181,19 +181,9 @@ export default defineComponent({
     const content = ref('Loading...');
     const expandedKeys = ref([]);
     const selectedKeys = ref([]);
-    const checkedKeys = ref([]);
     const expandedKeysDepths = ref([]);
     const selectedKeysDepths = ref([]);
-    const checkedKeysDepths = ref([]);
-    watch(expandedKeys, () => {
-      console.log('expandedKeys', expandedKeys);
-    });
-    watch(selectedKeys, () => {
-      console.log('selectedKeys', selectedKeys);
-    });
-    watch(checkedKeys, () => {
-      console.log('checkedKeys', checkedKeys);
-    });
+
     const state = reactive({
       selectedRowKeys: [],
       title:'新增角色',
@@ -221,6 +211,16 @@ export default defineComponent({
       createTime:''
     });
 
+    watch(expandedKeys, () => {
+      console.log('expandedKeys', expandedKeys);
+    });
+    watch(selectedKeys, () => {
+      console.log('selectedKeys', selectedKeys);
+    });
+    watch(formState.menuIdList, () => {
+      console.log('checkedKeys', formState.menuIdList);
+    });
+
     //表格勾选
     const onSelectChange = selectedRowKeys => {
       console.log('selectedRowKeys changed: ', selectedRowKeys);
@@ -229,8 +229,15 @@ export default defineComponent({
     const showModal = () => {
       state.title = '新增角色';
       visible.value = true;
-      formState.callType = '';
-      formState.describe = '';
+      for (let i in formState){
+        if(i=='menuList' || i=='deptIdList'){
+          formState[i] = []
+        }else if(i == 'deptId'){
+          formState[i] = null;
+        }else{
+          formState[i] = ""
+        }
+      }
     };
     const edit =async (text) => {
       state.title = '编辑类型';
@@ -240,14 +247,12 @@ export default defineComponent({
       });
       console.log(text)
       const {roleId}=text;
-      const {data:{roleName,remark,menuIdList,deptId,deptName,deptIdList}} = await getRoleInfo(roleId);
+      const {data} = await getRoleInfo(roleId);
       content.value = 'Loaded!';
-      formState.remark = remark;
-      formState.deptName =text.deptName;
-      formState.roleName =roleName;
-      formState.deptId = deptId;
-      checkedKeys.value = menuIdList;
-      checkedKeysDepths.value = deptIdList;
+      for(let i in formState){
+        if(i =='deptName') formState[i] = data[i] ? data[i] : text[i];
+        else formState[i] = data[i];
+      };
       visible.value = true;
     }
     const onFinish = values => {
@@ -344,10 +349,8 @@ export default defineComponent({
       formRef,
       expandedKeys,
       selectedKeys,
-      checkedKeys,
       expandedKeysDepths,
       selectedKeysDepths,
-      checkedKeysDepths,
       onFinish,
       selectTree,
       handleChange,

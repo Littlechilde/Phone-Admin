@@ -187,11 +187,9 @@ export default defineComponent({
     };
     const edit = (column, text,record) => {
       state.title = '编辑用户';
-      formState.deptId = text.deptId;
-      formState.username = text.username;
-      formState.mobile = text.mobile;
-      formState.email = text.email;
-      formState.roleIdList = text.roleIdList;
+      for (let i in formState){
+        formState[i] =text[i];
+      };
       visible.value = true;
     }
     const onFinish = values => {
