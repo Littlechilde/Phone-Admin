@@ -1,4 +1,4 @@
-import request from '@/utils/request';
+import request from '@/utils/request';//模块都有独立的顶级作用域下面的模块不能互相访问（类似两个函数作用域）
 
 export const systemApi ={
     login:"/int-admin/sys/login",
