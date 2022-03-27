@@ -4,7 +4,7 @@
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
         <a-space :size="16" align="center">
-          <a-button type="primary" @click="showModal">新增</a-button>
+          <a-button type="primary" @click="showModal" :loading="loading">新增</a-button>
           <a-button type="primary" danger>批量删除</a-button>
         </a-space>
       </a-col>
@@ -23,13 +23,19 @@
           <template v-if="column.dataIndex === 'icon'">
             <icon-font :type="record.icon" v-if="record.icon" :style="{fontSize:'20px'}"></icon-font>
           </template>
+          <template v-if="column.dataIndex === 'perms'">
+             <a-tag :color="item=='admin' ? '#f50':'#108ee9' " v-for="(item,index) in text" :key="index">{{item}}</a-tag>
+          </template>
+          <template v-if="column.dataIndex === 'url'">
+             <span v-if="text"><link-outlined /> {{text}}</span>
+          </template>
           <template v-else-if="column.key === 'action'">
           <span>
-            <a @click="edit(text)">编辑</a>
+            <a @click="edit(text)"><form-outlined /> 编辑</a>
             <a-divider type="vertical" />
             <!-- 操作气泡框 -->
             <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel(text)" @cancel="cancelDel">
-              <a href="javascript:;" style="color:#f5222d">删除</a>
+              <a href="javascript:;" style="color:#f5222d"><delete-outlined /> 删除</a>
             </a-popconfirm>
           </span>
         </template>
@@ -46,28 +52,53 @@
             <a-radio :value="2">按钮</a-radio>
           </a-radio-group>
         </a-form-item>
-        <a-form-item label="菜单名称" name="name" :rules="[{ required: true, message: '请输入菜单名称' }]">
-          <a-input v-model:value="formState.name" placeholder="请输入菜单名称" />
+        
+        <a-form-item label="菜单/按钮名称" name="name" :rules="[{ required: true, message: '请输入菜单或按钮名称' }]">
+          <a-input v-model:value="formState.name" placeholder="请输入菜单或按钮名称" />
         </a-form-item>
+        <a-form-item label="菜单Url" name="url" :rules="[{ required: true, message: '请输入菜单Url' }]" v-if="formState.type != 2" >
+          <a-input v-model:value="formState.url" placeholder="请输入菜单Url" :disabled="disabled" />
+        </a-form-item>
+        <a-form-item label="路由名称" name="routerName" :rules="[{ required: true, message: '请输入路由名称' }]" v-if="formState.type != 2" >
+          <a-input v-model:value="formState.routerName" placeholder="请输入路由名称" :disabled="disabled"/>
+        </a-form-item>
+        <a-form-item label="路由component" name="component" :rules="[{ required: true, message: '请输入component' }]" v-if="formState.type != 2" >
+          <a-input v-model:value="formState.component" placeholder="请输入component" :disabled="disabled"/>
+        </a-form-item>
+        <a-form-item label="菜单/按钮权限" name="perms" :rules="[{ required: true, message: '请输入权限授权' }]">
+          <a-input v-model:value="formState.perms" placeholder="权限授权(多个用逗号分隔，如：list,create)" />
+        </a-form-item>
+        <a-form-item label="图标" name="icon" :rules="[{ required: true, message: '请输入图标样式' }]" v-if="formState.type == 0">
+          <a-input v-model:value="formState.icon" placeholder="请输入iconFont图标样式" />
+        </a-form-item>
+
         <a-form-item label="上级菜单" name="parentId" :rules="[{ required: true, message: '请选择上级菜单' }]" v-if="formState.type">
-          <a-select style="width: 100%"  placeholder="请选择上级菜单" v-model:value="formState.parentId"  @focus="handleFocus" @change="handleChange" v-if="formState.type == 1" :disabled="disabled">
-            <a-select-option :value="item.menuId" v-for="item in data" :key="item.menuId">{{ item.name }}</a-select-option>
-          </a-select>
-          <!-- 二级菜单 -->
-          <a-select style="width: 100%" @change="handleChange" v-model:value="formState.parentId" placeholder="请选择上级菜单" v-else :disabled="disabled">
-            <a-select-opt-group :label="item.name" v-for="item in data" :key="item.menuId">
-              <a-select-option :value="i.menuId" v-for="i in item.children" :key="i.menuId">{{i.name}}</a-select-option>
-            </a-select-opt-group>
-          </a-select>
+          <a-tree-select
+            v-model:value="formState.parentId"
+            show-search
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            placeholder="请选择上级菜单"
+            allow-clear
+            :treeDefaultExpandedKeys="[]"
+            :tree-data="data"
+            :field-names="{
+              children: 'children',
+              label: 'name',
+              key: 'menuId',
+              value: 'menuId',
+            }"
+            :disabled="disabled"
+            @change="selectTree"
+          >
+          </a-tree-select>
         </a-form-item>
-        <a-form-item label="菜单Url" name="url" :rules="[{ required: true, message: '请输入菜单Url' }]" v-if="formState.type == 1">
-          <a-input v-model:value="formState.url" placeholder="请输入菜单Url" />
+
+        <a-form-item label="路由redirect" name="redirect" :rules="[{ required: false, message: '请输入路由redirect' }]" v-if="formState.type != 2" >
+          <a-input v-model:value="formState.redirect" placeholder="如需要请输入路由redirect" />
         </a-form-item>
-        <a-form-item label="图标" name="icon" :rules="[{ required: true, message: '请输入图标样式' }]" v-if="formState.type != 2">
-          <a-input v-model:value="formState.icon" placeholder="请输入图标样式" />
-        </a-form-item>
-        <a-form-item label="授权标识" name="perms" :rules="[{ required: true, message: '请输入授权标识' }]" v-if="formState.type == 2">
-          <a-input v-model:value="formState.perms" placeholder="请输入授权标识" />
+        <a-form-item label="路由隐藏" name="hidden" v-if="formState.type != 2" >
+          <a-switch v-model:checked="formState.hidden" @change="checkedHidden"/>
         </a-form-item>
       </a-form>
     </a-modal>
@@ -76,7 +107,7 @@
 
 <script>
 import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
-import { DownOutlined  } from '@ant-design/icons-vue';
+import { DownOutlined,LinkOutlined,FormOutlined,DeleteOutlined  } from '@ant-design/icons-vue';
 import IconFont from "@/assets/iconFont/icon";
 import { message } from 'ant-design-vue';
 
@@ -151,7 +182,10 @@ const columns = ref([{
 export default defineComponent({
   components: {
     DownOutlined,
-    IconFont
+    LinkOutlined,
+    IconFont,
+    DeleteOutlined,
+    FormOutlined
   },
   setup() {
     const formRef = ref();
@@ -162,19 +196,23 @@ export default defineComponent({
       title:'新增菜单',
       spinning:true,
       data:[],
-      key:0,
+      loading:true,
       disabled:false
     });
     const formState = reactive({
-     "icon": "",
+      "children":[],
+    	"component": "",
+      "hidden": false,
+      "icon": "",
       "list": [],
       "menuId": 0,
       "name": "",
-      "open": true,
       "orderNum": 0,
       "parentId": 0,
-      "parentName": "",
+      "parentName": "", 
       "perms": "",
+      "redirect": "",
+      "routerName":"",
       "type": 0,
       "url": ""
     });
@@ -194,16 +232,24 @@ export default defineComponent({
       formState.icon='';
       formState.parentId = 0;
       formState.type = 0;
+      formState.hidden =false;
+      formState.redirect="";
+      formState.routerName='';
+      formState.component="";
     };
     const edit = (text) => {
       state.title = '编辑菜单';
       formState.name=text.name;
       formState.url = text.url;
-      formState.perms=text.perms;
+      formState.perms=text.perms ? text.perms.toString() : '';
       formState.icon=text.icon;
       formState.parentId = text.parentId;
       formState.type = text.type;
       formState.menuId = text.menuId;
+      formState.hidden =text.hidden;
+      formState.redirect=text.redirect;
+      formState.routerName=text.routerName;
+      formState.component=text.component;
       state.disabled = true;
       visible.value = true;
     }
@@ -222,11 +268,13 @@ export default defineComponent({
       await formRef.value.validateFields();
       confirmLoading.value = true;
       if(state.title=='新增菜单'){
-        await saveMenu(formState);
-        confirmLoading.value = false;
-        visible.value = false;
-        await queryList();
-        message.success('Success');
+        const {code} = await saveMenu(formState);
+        if(!code){
+          confirmLoading.value = false;
+          visible.value = false;
+          await queryList();
+          message.success('Success');
+        }
       }else{
         //修改
         await updateMenu(formState);
@@ -265,13 +313,17 @@ export default defineComponent({
       }
       formState.type =value;
     }
-    const handleChange = value => {
+    const selectTree = value => {
       console.log(`selected ${value}`);
       formState.parentId = value;
     };
     const handleFocus = () => {
       console.log('focus');
     };
+    const checkedHidden=(checked) => {
+      formState.hidden=checked;
+      console.log(checked);
+    }
 
     /*查询列表*/
     async function queryList() {
@@ -279,7 +331,9 @@ export default defineComponent({
       state.spinning = true;
       const res= await menuList({});
       res.forEach((item) => {
-        item.key = item.menuId
+        item.key = item.menuId;
+        if(item.perms)
+        item.perms = item.perms.split(',');
       })
       state.data = formatTree(res,'menuId','parentId','children',0);
       console.log(state.data)
@@ -287,6 +341,7 @@ export default defineComponent({
     }
     onMounted(async ()=>{
       await queryList();
+      state.loading = false;
     });
     return {
       ...toRefs(state),
@@ -301,7 +356,8 @@ export default defineComponent({
         col.width = w;
       },
       onSelectChange,
-      handleChange,
+      checkedHidden,
+      selectTree,
       handleFocus,
       onFinishFailed,
       showModal,

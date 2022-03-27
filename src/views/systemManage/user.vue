@@ -4,7 +4,7 @@
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
         <a-space :size="16" align="center">
-          <a-button type="primary" @click="showModal">新增</a-button>
+          <a-button type="primary" @click="showModal" :loading="disabled">新增</a-button>
           <a-button type="primary"  danger>批量删除</a-button>
         </a-space>
       </a-col>
@@ -19,11 +19,11 @@
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
-            <a @click="edit(column, text,record)">编辑</a>
+            <a @click="edit(column, text,record)"><form-outlined /> 编辑</a>
             <a-divider type="vertical" />
             <!-- 操作气泡框 -->
             <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel(text)" @cancel="cancelDel">
-              <a href="javascript:;" style="color:#f5222d">删除</a>
+              <a href="javascript:;" style="color:#f5222d"><delete-outlined /> 删除</a>
             </a-popconfirm>
           </span>
         </template>
@@ -33,11 +33,39 @@
     <!-- model开始 -->
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-        <a-form-item label="部门ID" name="deptId" :rules="[{ required: true, message: '请输入部门ID' }]">
-          <a-input v-model:value="formState.deptId" placeholder="请输入部门ID" allowClear/>
+        <a-form-item label="用户部门" name="deptId" :rules="[{ required: true, message: '请选择部门' }]">
+          <a-tree-select
+            v-model:value="formState.deptId"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            placeholder="请选择部门"
+            allow-clear
+            :treeDefaultExpandedKeys="[]"
+            :tree-data="deptList"
+            :field-names="{
+              children: 'children',
+              label: 'name',
+              key: 'deptId',
+              value: 'deptId',
+            }"
+            @change="selectTree"
+          >
+          </a-tree-select>
         </a-form-item>
         <a-form-item label="用户名" name="username" :rules="[{ required: true, message: '请输入用户名' }]">
           <a-input v-model:value="formState.username" placeholder="请输入用户名" allowClear/>
+        </a-form-item>
+        <a-form-item label="所属角色" name="roleIdList" :rules="[{ required:roleList.length ? true : false, message: '请选择角色' }]">
+          <a-checkbox-group v-model:value="formState.roleIdList" style="width: 100%" @change="boxChange">
+            <a-row>
+              <a-col :span="6" v-for="item in roleList" :key="item.roleId"  v-if="roleList.length">
+                <a-checkbox :value="item.roleId">{{item.roleName}}</a-checkbox>
+              </a-col>
+              <a-col :span="10" v-else>
+                <a-checkbox disabled>暂无角色</a-checkbox>
+              </a-col>
+            </a-row>
+          </a-checkbox-group>
         </a-form-item>
         <a-form-item label="手机号" name="mobile" :rules="[{ required: true, message: '请输入正确的手机号',pattern: /^(13[0-9]|14[01456879]|15[0-35-9]|16[2567]|17[0-8]|18[0-9]|19[0-35-9])\d{8}$/,trigger: 'blur',max:11 }]">
           <a-input v-model:value="formState.mobile" :maxlength="11" placeholder="请输入手机号码" allowClear/>
@@ -58,10 +86,13 @@
 
 <script>
 import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
-import { DownOutlined  } from '@ant-design/icons-vue';
+import { DownOutlined,FormOutlined,DeleteOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
-
+import {formatTree} from '@/utils/formatTree';
+//api
 import {userList,userUpdate,userPassword,userSave,userDelete} from '@/api/user';
+import {roleCheck} from '@/api/role';
+import {partList} from '@/api/department';
 const formItemLayout = {
     labelCol: {
       span: 6,
@@ -71,7 +102,7 @@ const formItemLayout = {
     },
 };
 const columns = [{
-  title: '序号',
+  title: '用户ID',
   dataIndex: 'key',
   key: 'key',
   width: 100
@@ -110,6 +141,8 @@ const columns = [{
 export default defineComponent({
   components: {
     DownOutlined,
+    DeleteOutlined,
+    FormOutlined
   },
   setup() {
     const formRef = ref();
@@ -120,13 +153,15 @@ export default defineComponent({
       title:'新增用户',
       spinning:true,
       data:[],
-      key:0,
+      roleList:[],
+      deptList:[],
+      disabled:true,
     });
     const formState = reactive({
       username: '',
       mobile:'',
       email: '',
-      deptId:0,
+      deptId:null,
       roleIdList:[],
       password:'',
       newPassword:''
@@ -141,7 +176,13 @@ export default defineComponent({
       state.title = '新增类型';
       visible.value = true;
       for(let i in formState){
-        formState[i] = ''
+        if(i=='deptId'){
+          formState[i] =null
+        }else if (i=='roleIdList'){
+          formState[i] =[]
+        }else{
+          formState[i] = ''
+        }
       }
     };
     const edit = (column, text,record) => {
@@ -150,6 +191,7 @@ export default defineComponent({
       formState.username = text.username;
       formState.mobile = text.mobile;
       formState.email = text.email;
+      formState.roleIdList = text.roleIdList;
       visible.value = true;
     }
     const onFinish = values => {
@@ -212,21 +254,41 @@ export default defineComponent({
       console.log(e);
       message.error('Click on No');
     };
+    const boxChange= checkedValue =>{
+      console.log(`selected ${checkedValue}`);
+      formState.roleIdList = String(checkedValue).split(',')
+    }
+    const selectTree = value => {
+      console.log(`selected ${value}`);
+      formState.deptId = value;
+    };
     
     /*查询列表*/
     async function queryList() {
       if(!state.spinning)
       state.spinning = true;
       const {data:{data}} = await userList({});
-      state.data = data.map((item,index)=>{
-        return {key:index+1, ...item}
+      state.data = data.map((item)=>{
+        return {key:item.userId, ...item}
       });
       state.spinning =false;
     };
-
+    /*角色*/
+    async function roleClick(){
+      const {data} = await roleCheck();
+      state.roleList = data;
+    }
+    /**部门 */
+    async function getPart(){
+      const res= await partList();
+      state.deptList = formatTree(res,'deptId','parentId','children',0);
+    }
     onMounted(async ()=>{
       console.log('---onMounted---');
+      await roleClick();
+      await getPart();
       await queryList();
+      state.disabled = false;
     });
     return {
       ...toRefs(state),
@@ -237,6 +299,8 @@ export default defineComponent({
       formState,
       formRef,
       onFinish,
+      selectTree,
+      boxChange,
       onSelectChange,
       onFinishFailed,
       showModal,

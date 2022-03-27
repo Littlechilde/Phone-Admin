@@ -69,7 +69,7 @@ export default {
     };
     //菜单折叠事件
     const openChange=(openKeys)=>{
-      // getMenu.openKeys = openKeys;
+      if(openKeys)
       localStorage.setItem("openKeys", JSON.stringify(openKeys)); // 设置
     }
     //路由跳转

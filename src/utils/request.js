@@ -33,7 +33,7 @@ service.interceptors.response.use(
   response => {
     const { data } = response;
     const { code } = data;
-    if (code==-1) {
+    if (code==-1 || code == -2) {
       message.error(data.message || data.msg + ': ' + data.data)
     }
     return data

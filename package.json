@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "add": "^2.0.6",
-    "ant-design-vue": "^3.1.0-rc.2",
+    "ant-design-vue": "^3.1.0-rc.4",
     "axios": "^0.26.0",
     "global": "^4.4.0",
     "less": "^4.1.2",

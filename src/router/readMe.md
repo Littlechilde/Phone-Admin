@@ -17,3 +17,34 @@
   },
   "children": [] //是否有子节点[],可选项
 }
+
+/*动态路由 前端控制,name匹配*/
+const menuList=[{name:'测试3'},{name:'测试38'},{name:'测试380'}]
+const asyncRouterMap=[{name:'测试1'},{name:'测试2'},{name:'测试3',children:[{name:'测试4'},{name:'测试5'}]}]
+
+function hasPermission (route) {
+  if (menuList.length) {
+    let flag = false;
+    for(let i=0;i <menuList.length;i++) {
+      flag= menuList[i].name ==route.name;
+      if(flag) {
+        return true
+      }
+    }
+    return false
+  }
+  return true
+}
+function filterAsyncRouter (routerMap) {
+  const accessedRouters = routerMap.filter(route => {
+    if (hasPermission(route)) {
+      if (route.children && route.children.length) {
+        route.children = filterAsyncRouter(route.children)
+      }
+      return true
+    }
+    return false
+  })
+  return accessedRouters
+}
+const accessedRouters = filterAsyncRouter(asyncRouterMap)

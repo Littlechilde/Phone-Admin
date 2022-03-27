@@ -26,6 +26,7 @@ export default {
     // state1 = reactive({
     //   count1: 122,
     // }) //直接修改、定义、添加属性丧失响应式 或proxy 不触发页面更新
+    // state1=Object.assign(...state1,{count1:999})
      state.a={d:66}
     //  state1.dh = [172]
      console.log(state1)

@@ -3,8 +3,10 @@
     <!-- 操作项 -->
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
-        <a-button type="primary" @click="showModal">新增</a-button>
-        <a-button type="primary" style="margin-left: 16px;" danger>批量删除</a-button>
+        <a-space :size="16" align="center">
+          <a-button type="primary" @click="showModal" :loading="loading">新增</a-button>
+          <a-button type="primary" danger>批量删除</a-button>
+        </a-space>
       </a-col>
     </a-row>
     <!-- table开始 -->
@@ -20,11 +22,11 @@
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
-            <a @click="edit(text)">编辑角色</a>
+            <a @click="edit(text)"><form-outlined /> 编辑</a>
             <a-divider type="vertical" />
             <!-- 操作气泡框 -->
             <a-popconfirm title="你确定要删除吗？" ok-text="是" cancel-text="否" @confirm="confirmDel(text)" @cancel="cancelDel">
-              <a href="javascript:;" style="color:#f5222d">删除</a>
+              <a href="javascript:;" style="color:#f5222d"><delete-outlined /> 删除</a>
             </a-popconfirm>
           </span>
         </template>
@@ -34,23 +36,98 @@
     <!-- model开始 -->
     <a-modal v-model:visible="visible" :title="title" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="cancel" ok-text="确认" cancel-text="取消" destroyOnClose>
       <a-form ref="formRef" :model="formState" name="basic" v-bind="formItemLayout" autocomplete="off" @finish="onFinish" @finishFailed="onFinishFailed">
-        <a-form-item label="角色名称" name="callType" :rules="[{ required: true, message: '请输入角色名称' }]">
-          <a-input v-model:value="formState.callType" />
+        <a-form-item label="角色名称" name="roleName" :rules="[{ required: true, message: '请输入角色名称' }]">
+          <a-input v-model:value="formState.roleName" placeholder="请输入角色名称"/>
         </a-form-item>
-        <a-form-item label="角色类型" name="describe" :rules="[{ required: true, message: '请选择角色类型' }]">
-          <a-input v-model:value="formState.describe" />
+        <a-form-item label="角色类型" name="orgType" :rules="[{ required: true, message: '请选择角色类型' }]">
+           <a-radio-group v-model:value="formState.orgType" name="radioGroup">
+            <a-radio value="1">超级管理员</a-radio>
+            <a-radio value="2">市级用户</a-radio>
+            <a-radio value="3">部门用户</a-radio>
+          </a-radio-group>
         </a-form-item>
+        <a-form-item label="部门名称" name="deptName" :rules="[{ required: true, message: '请选择部门' }]">
+           <a-tree-select
+            v-model:value="formState.deptId"
+            style="width: 100%"
+            :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+            placeholder="请选择部门"
+            allow-clear
+            :treeDefaultExpandedKeys="[]"
+            :tree-data="deptList"
+            :field-names="{
+              children: 'children',
+              label: 'name',
+              key: 'deptId',
+              value: 'deptId',
+            }"
+            @change="selectTree"
+          >
+          </a-tree-select>
+        </a-form-item>
+        <a-form-item label="备注" name="remark" :rules="[{ required: false, message: '请输入输入备注' }]">
+          <a-input v-model:value="formState.remark" placeholder="请输入输入备注"/>
+        </a-form-item>
+        <a-divider/>
+        <div class="tree">
+          <main class="listBox">
+            <h5>菜单权限</h5>
+            <a-tree
+              v-model:expandedKeys="expandedKeys"
+              v-model:selectedKeys="selectedKeys"
+              v-model:checkedKeys="checkedKeys"
+              checkable
+              :tree-data="treeData"
+              :field-names="{
+                children: 'children',
+                label: 'name',
+                key: 'menuId',
+                value: 'menuId',
+              }"
+            >
+              <template #title="{ name:title,menuId:key }">
+                <span v-if="key === '0-0-1-0'" style="color: #FA541C">{{ title }}</span>
+                <template v-else>{{ title }}</template>
+              </template>
+            </a-tree>
+          </main>
+          <a-divider type="vertical" style="height: auto;" dashed />
+          <aside class="listBox">
+             <h5>部门权限</h5>
+              <a-tree
+              v-model:expandedKeys="expandedKeysDepths"
+              v-model:selectedKeys="selectedKeysDepths"
+              v-model:checkedKeys="checkedKeysDepths"
+              checkable
+              :tree-data="deptList"
+              :field-names="{
+                children: 'children',
+                label: 'name',
+                key: 'deptId',
+                value: 'deptId',
+             }"
+            >
+              <template #title="{ name }">
+                <span style="color: #FA541C">{{ name }}</span>
+              </template>
+            </a-tree>
+          </aside>
+        </div>
       </a-form>
     </a-modal>
   </div>
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
-import { DownOutlined  } from '@ant-design/icons-vue';
+import { defineComponent, ref, reactive, toRefs,onMounted,watch } from 'vue';
+import { DownOutlined,FormOutlined,DeleteOutlined  } from '@ant-design/icons-vue';
 import { message } from 'ant-design-vue';
+import {formatTree} from '@/utils/formatTree';
 
-import {getRoleType} from '@/api/api';
+// import {getRoleType} from '@/api/api';
+import {roleList,menuList,getRoleInfo,roleDelete,roleUpdate,roleAdd} from '@/api/role';
+import {partList} from '@/api/department';
+
 const formItemLayout = {
     labelCol: {
       span: 6,
@@ -60,51 +137,88 @@ const formItemLayout = {
     },
 };
 const columns = [{
-  title: '序号',
-  dataIndex: 'number',
-  key: 'number',
+  title: '角色ID',
+  dataIndex: 'roleId',
+  key: 'roleId',
   width: 100
 }, {
   title: '角色名称',
-  dataIndex: 'callType',
-  key: 'callType',
+  dataIndex: 'roleName',
+  key: 'roleName',
 }, {
-  title: '角色类型',
-  dataIndex: 'describe',
-  key: 'describe',
+  title: '所属部门',
+  dataIndex: 'deptName',
+  key: 'deptName',
   ellipsis: true,
 },
-// {
-//   title: '备注',
-//   dataIndex: 'mark',
-//   key: 'mark',
-//   ellipsis: true,
-// },
+{
+  title: '备注',
+  dataIndex: 'remark',
+  key: 'remark',
+  ellipsis: true,
+},
+{
+  title: '创建时间',
+  dataIndex: 'createTime',
+  key: 'createTime',
+  ellipsis: true,
+},
  {
   title: '操作',
   key: 'action',
 }
 ];
-
 export default defineComponent({
   components: {
     DownOutlined,
+    DeleteOutlined,
+    FormOutlined
   },
   setup() {
     const formRef = ref();
     const visible = ref(false);
     const confirmLoading = ref(false);
+    const content = ref('Loading...');
+    const expandedKeys = ref([]);
+    const selectedKeys = ref([]);
+    const checkedKeys = ref([]);
+    const expandedKeysDepths = ref([]);
+    const selectedKeysDepths = ref([]);
+    const checkedKeysDepths = ref([]);
+    watch(expandedKeys, () => {
+      console.log('expandedKeys', expandedKeys);
+    });
+    watch(selectedKeys, () => {
+      console.log('selectedKeys', selectedKeys);
+    });
+    watch(checkedKeys, () => {
+      console.log('checkedKeys', checkedKeys);
+    });
     const state = reactive({
       selectedRowKeys: [],
-      title:'新增类型',
+      title:'新增角色',
       spinning:true,
       data:[],
       key:0,
+      loading:true,
+      header:{
+        pageNum:1,
+        pageSize:10,
+        orderField:'',
+        orderType:''
+      },
+      treeData:[],
+      deptList:[]
     });
     const formState = reactive({
-      callType: '',
-      describe: '',
-      remember: true,
+      remark: '',
+      roleName:'',
+      orgType:'',
+      deptId:null,
+      deptName:"",
+      menuIdList:[],
+      deptIdList:[],
+      createTime:''
     });
 
     //表格勾选
@@ -113,16 +227,27 @@ export default defineComponent({
       state.selectedRowKeys = selectedRowKeys;
     };
     const showModal = () => {
-      state.title = '新增类型';
+      state.title = '新增角色';
       visible.value = true;
       formState.callType = '';
       formState.describe = '';
     };
-    const edit = (text) => {
+    const edit =async (text) => {
       state.title = '编辑类型';
-      formState.callType = text.callType;
-      formState.describe = text.describe;
-      state.key = text.key;
+      content.value ='Loading...';
+      message.loading({
+        content: () => content.value,
+      });
+      console.log(text)
+      const {roleId}=text;
+      const {data:{roleName,remark,menuIdList,deptId,deptName,deptIdList}} = await getRoleInfo(roleId);
+      content.value = 'Loaded!';
+      formState.remark = remark;
+      formState.deptName =text.deptName;
+      formState.roleName =roleName;
+      formState.deptId = deptId;
+      checkedKeys.value = menuIdList;
+      checkedKeysDepths.value = deptIdList;
       visible.value = true;
     }
     const onFinish = values => {
@@ -137,58 +262,77 @@ export default defineComponent({
     };
     //表单提交
     const handleOk =async () => {
-      const values = await formRef.value.validateFields();
+      await formRef.value.validateFields();
       confirmLoading.value = true;
-      if(state.title=='新增类型'){
-        setTimeout(() => {
-          visible.value = false;
-          //模拟add
-          state.data.push({...values,key:state.data.length+1,number:state.data.length+1});
-          console.log(state.data)
-          confirmLoading.value = false;
-          message.success('Success');
-          resetForm();
-        }, 1000);
+      if(state.title=='新增角色'){
+         const {code} = await roleAdd(formState);
+         if(!code){
+           visible.value = false;
+           message.success('Success');
+         }else{ return}
       }else{
         //修改
-         setTimeout(() => {
-          visible.value = false;
-          state.data[Number(state.key)-1]={...values,key:state.data.length+1,number:state.data.length+1};
-          confirmLoading.value = false;
-          message.success('Success');
-          resetForm();
-        }, 2000);
+          const {code} = await roleUpdate(formState);
+          if(!code){
+            visible.value = false;
+            message.success('修改成功');
+          }else{ return }
       }
+      await queryList();
+      confirmLoading.value = false;
     };
     //表单取消
     const cancel=() => {
-      console.log('Cancelled')
       confirmLoading.value = false;
       resetForm();
     }
-    const confirmDel = text => {
-      console.log(text);
-      setTimeout(() =>{
-        state.data = state.data.filter((item ,index)=>item.key != text.key);
-        message.success('删除成功');
-      },1000)
+    const confirmDel = async text => {
+        const {code} = await roleDelete({roleIds:text.roleId});
+        if(!code){
+          message.success('删除成功');
+          await queryList();
+        }
     };
     const cancelDel = e => {
       console.log(e);
       message.error('Click on No');
     };
+    const handleChange = value => {
+      console.log(`selected ${value}`);
+    };
+    const selectTree = value => {
+      console.log(`selected ${value}`);
+      formState.deptId = value;
+    };
     
-    /*查询列表*/
-    async function queryType() {
+    /*查询role列表*/
+    async function queryList() {
       if(!state.spinning)
       state.spinning = true;
-      const {data} = await getRoleType({});
-      state.data = data;
+      const {header} = state;
+      const {data} = await roleList(header);
+      const roleData = data.data;
+      roleData.map(item=>{item.key = item.roleId});
+      state.data = roleData;
       state.spinning =false;
     }
+    /**查询Menu列表 */
+    async function queryMenu(){
+      const res = await menuList();
+      state.treeData = formatTree(res,'menuId','parentId','children',0);
+      console.log(state.treeData)
+    }
+    /**部门 列表*/
+    async function getPart(){
+      const res= await partList();
+      state.deptList = formatTree(res,'deptId','parentId','children',0);
+    }
+
     onMounted(async ()=>{
-      console.log('---onMounted---');
-      await queryType();
+      await queryMenu();
+      await getPart();
+      await queryList();
+      state.loading =false;
     });
     return {
       ...toRefs(state),
@@ -198,7 +342,15 @@ export default defineComponent({
       confirmLoading,
       formState,
       formRef,
+      expandedKeys,
+      selectedKeys,
+      checkedKeys,
+      expandedKeysDepths,
+      selectedKeysDepths,
+      checkedKeysDepths,
       onFinish,
+      selectTree,
+      handleChange,
       onSelectChange,
       onFinishFailed,
       showModal,
@@ -206,7 +358,7 @@ export default defineComponent({
       cancel,
       confirmDel,
       cancelDel,
-      edit
+      edit,
     };
   },
 });
@@ -216,5 +368,37 @@ export default defineComponent({
 // 分页边距
  :deep(.ant-pagination) {
   margin: 16px 0 0 0;
+}
+.tree {
+  max-height: 450px;
+  overflow: overlay;
+  display: flex;
+  .listBox{
+    width: 50%;
+    h5{
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+  &::-webkit-scrollbar {
+    width: 6px;
+    border-radius: 3px;
+  }
+  &::-webkit-scrollbar-track-piece {
+    // background-color: #fff;
+    background-color: transparent;
+  } /* 滚动条的内层滑轨背景颜色 */
+  &::-webkit-scrollbar-thumb {
+    background-color: rgba(0, 0, 0, 0.06);
+    border-radius: 2px;
+  }/* 滚动条的内层滑块颜色 */
+  &::-webkit-scrollbar-track {
+    // background-color: rgba(0, 0, 0, 0.05);
+    background-color: transparent;
+  } /* 滚动条的外层滑轨背景颜色 */
+  & ::-webkit-scrollbar-button {
+    background-color: #fff;
+    display: none;
+  } /* 滑轨两头的监听按钮颜色 */
 }
 </style>

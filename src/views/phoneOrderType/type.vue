@@ -12,7 +12,7 @@
     </a-row>
     <!-- table开始 -->
     <a-spin :spinning="spinning" tip="Loading...">
-      <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :columns="columns" :data-source="data">
+      <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :columns="columns" :data-source="data" @resizeColumn="handleResizeColumn">
         <!-- v-slot:bodyCell="{text, record, index, column}" 个性化单元格-->
         <template #bodyCell="{ column, text,record }">
           <template v-if="column.dataIndex === 'name'">
@@ -72,15 +72,22 @@ const formItemLayout = {
       span: 18,
     },
 };
-const columns = [{
+const columns = ref([{
   title: '序号',
   dataIndex: 'menuId',
   key: 'menuId',
+  resizable: true,
+  minWidth: 100,
+  maxWidth: 300,
   width: 200
 }, {
   title: '部门名称',
   dataIndex: 'name',
   key: 'name',
+  resizable: true,
+  minWidth: 200,
+  maxWidth: 400,
+  width: 300
 }, {
   title: '上级部门',
   dataIndex: 'parentName',
@@ -97,7 +104,7 @@ const columns = [{
   title: '操作',
   key: 'action',
 }
-];
+]);
 
 export default defineComponent({
   components: {
@@ -294,6 +301,9 @@ export default defineComponent({
       formState,
       formRef,
       onFinish,
+      handleResizeColumn: (w, col) => {
+        col.width = w;
+      },
       cleanAll,
       onSelectChange,
       onFinishFailed,

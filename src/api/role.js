@@ -6,18 +6,59 @@ const roleApi={
   roleEdit:"/int-admin/sys/role/update",
   roleSelect:"/int-admin/sys/role/select",
   roleDelete:"/int-admin/sys/role/delete",
-  // roleInfo:`/int-admin/sys/role/info/${roleId}`,
+  roleInfo:`/int-admin/sys/role/info`,
 
   menuList:'/int-admin/sys/menu/list',
   saveMenu:'/int-admin/sys/menu/save',
   updateMenu:'/int-admin/sys/menu/update',
-  deleteMenu:'/int-admin/sys/menu/delete'
+  deleteMenu:'/int-admin/sys/menu/delete',
+  navMenu:'/int-admin/sys/menu/nav'
 }
 
 //获取角色列表
 export function roleList(data) {
   return request({
     url:roleApi.getRole,
+    method: 'GET',
+    //`headers` are custom headers to be sent,不修改预定义
+    headers:data
+  })
+};
+//角色信息
+export function getRoleInfo(roleId) {
+  return request({
+    url:`${roleApi.roleInfo}/${roleId}`,
+    method: 'GET',
+  })
+};
+//删除角色
+export function roleDelete(data) {
+  return request({
+    url:roleApi.roleDelete,
+    method: 'POST',
+    data
+  })
+};
+//修改角色
+export function roleUpdate(data) {
+  return request({
+    url:roleApi.roleEdit,
+    method: 'POST',
+    data
+  })
+};
+//查询角色选择
+export function roleCheck(data) {
+  return request({
+    url:roleApi.roleSelect,
+    method: 'GET',
+    data
+  })
+};
+//新增角色
+export function roleAdd(data) {
+  return request({
+    url:roleApi.saveRole,
     method: 'POST',
     data
   })
@@ -50,6 +91,14 @@ export function updateMenu(data) {
 export function deleteMenu(data) {
   return request({
     url:roleApi.deleteMenu,
+    method: 'GET',
+    params:data
+  })
+};
+//登录/刷新加载菜单
+export function navMenu(data) {
+  return request({
+    url:roleApi.navMenu,
     method: 'GET',
     params:data
   })
