@@ -13,7 +13,8 @@ const actions = {
  async routers({ commit }, auth){
     /**加载角色菜单(后台) ，初始标识前端设置，其中数据勾选权限标识后台修改权限标识[user,admin,test](猜测方法1)--->traversalRoutes()*/
     const {data}= await navMenu();
-    const asyncRoutesApi = roleMenu(data);
+    let asyncRoutesApi = roleMenu(data);
+    asyncRoutesApi = filterAsyncRouter(asyncRoutesApi);
     console.log(asyncRoutesApi);
     return new Promise((resolve, reject) => {
       const layout = constantRoutes.find((item) => item.path === '/');
@@ -57,6 +58,28 @@ function traversalRoutes(routes, auth) {
   })
   return result
 };
+/**如果返回type=2按钮级别，则做筛选 */
+function filterAsyncRouter (routerMap) {
+  const accessedRouters = routerMap.filter(route => {
+    if (hasPermission(route)) {
+      if (route.children && route.children.length) {
+        route.children = filterAsyncRouter(route.children)
+      }
+      return true
+    }
+    return false
+  })
+  return accessedRouters
+};
+function hasPermission (r) {
+  let flag = false;
+  const { meta:{type} } = r;
+  flag=type==2;
+    if(flag) {
+      return false
+    }
+  return true
+};
 //用户加载菜单格式化,require 是属于 Webpack 的方法
 function roleMenu(menu) {
   let result =[];
@@ -68,7 +91,8 @@ function roleMenu(menu) {
     menuObj.meta={
       icon:item.icon,
       auth:item.perms ? item.perms.split(','):'',
-      title:item.name
+      title:item.name,
+      type:item.type
     }
     if(item.redirect){
       menuObj.redirect=item.redirect;
