@@ -11,7 +11,7 @@ const state = {
 //响应组件中操作
 const actions = {
  async routers({ commit }, auth){
-    /**加载角色菜单(后台) */
+    /**加载角色菜单(后台) ，初始标识前端设置，其中数据勾选权限标识后台修改权限标识[user,admin,test](猜测方法1)--->traversalRoutes()*/
     const {data}= await navMenu();
     const asyncRoutesApi = roleMenu(data);
     console.log(asyncRoutesApi);

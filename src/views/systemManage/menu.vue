@@ -266,17 +266,16 @@ export default defineComponent({
         if(!code){
           confirmLoading.value = false;
           visible.value = false;
-          await queryList();
-          message.success('Success');
-        }
+        }else{return false}
       }else{
         //修改
-        await updateMenu(formState);
-        confirmLoading.value = false;
+        const {code} = await updateMenu(formState);
+        if(!code)
         visible.value = false;
-        await queryList();
-        message.success('Success');
+        confirmLoading.value = false;
       }
+      await queryList();
+      message.success('Success');
     };
     //表单取消
     const cancel=() => {

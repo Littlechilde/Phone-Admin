@@ -29,7 +29,7 @@
               <a href="javascript:;" style="color:#f5222d"><delete-outlined /> 删除</a>
             </a-popconfirm>
           </span>
-        </template>
+          </template>
         </template>
       </a-table>
     </a-spin>
@@ -230,7 +230,7 @@ export default defineComponent({
       state.title = '新增角色';
       visible.value = true;
       for (let i in formState){
-        if(i=='menuList' || i=='deptIdList'){
+        if(i=='menuIdList' || i=='deptIdList'){
           formState[i] = []
         }else if(i == 'deptId'){
           formState[i] = null;

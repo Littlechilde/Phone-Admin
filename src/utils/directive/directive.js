@@ -25,4 +25,6 @@
     unmounted() {}
   })
 }
-export default myDirective
+export default myDirective;
+
+/**递归取出所有按钮权限type=2，且辨识符key[value]唯一。勾选判断按钮权限 (猜测方法1)，保存vuex--->判断*/

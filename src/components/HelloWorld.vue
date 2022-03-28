@@ -5,13 +5,19 @@
 
    <a @click="fan3">fan3 + {{a}} {{shy}}</a>
   </div>
+  <div>
+    <a-button type="primary" @click="toTest">测试</a-button>
+    <slot name="title"></slot>
+  </div>
 </template>
 
 <script>
-import { reactive, toRefs,toRaw } from 'vue'
+import { reactive, toRefs,toRaw,ref} from 'vue'
 
 export default {
-  setup () {
+  props: ['msg','show'],
+  emits:['update:msg','update:show'],
+  setup (props,{emit}) {
     let state = reactive({
       count: 0,
       shy:[{a:1},{a:2}],
@@ -39,11 +45,17 @@ export default {
     console.log(state.shy,d)
     state.a={}
   }
+  const toTest=()=>{
+    console.log(props)
+    emit('update:msg','测试成功')
+    emit('update:show','show 成功')
+  }
     return {
       ...toRefs(state),
       ...toRefs(state1),
       fan,
-      fan3
+      fan3,
+      toTest
     }
   }
 }
