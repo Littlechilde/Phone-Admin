@@ -14,7 +14,7 @@
       <a-table :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }" :columns="columns" :data-source="data">
         <!-- v-slot:bodyCell="{text, record, index, column}" 个性化单元格-->
         <template #bodyCell="{ column, text,record }">
-          <template v-if="column.dataIndex === 'username'">
+          <template v-if="column.dataIndex === 'roleName'">
             <a>{{ text }}</a>
           </template>
           <template v-else-if="column.key === 'action'">
