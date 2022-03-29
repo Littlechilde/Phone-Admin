@@ -4,7 +4,7 @@
     <a-row type="flex" justify="start" align="middle" :gutter="16" style="padding-bottom:16px !important;">
       <a-col :span="6">
         <a-space :size="16" align="center">
-          <a-button type="primary" @click="showModal">新增同级</a-button>
+          <a-button type="primary" @click="showModal">新增地区</a-button>
           <a-button type="primary" danger @click="cleanAll">批量删除</a-button>
         </a-space>
       </a-col>
