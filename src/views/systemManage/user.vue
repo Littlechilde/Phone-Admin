@@ -107,16 +107,17 @@ const columns = [{
   key: 'key',
   width: 100
 },
+ {
+  title: '用户名',
+  dataIndex: 'username',
+  key: 'username',
+}, 
 {
   title: '部门名称',
   dataIndex: 'deptName',
   key: 'deptName',//Vue 需要的 key，如果已经设置了唯一的 dataIndex，可以忽略这个属性
 },
- {
-  title: '用户名',
-  dataIndex: 'username',
-  key: 'username',
-}, {
+{
   title: '手机号',
   dataIndex: 'mobile',
   key: 'mobile',

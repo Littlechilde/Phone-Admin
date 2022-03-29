@@ -18,10 +18,7 @@
             <a>{{ text }}</a>
           </template>
           <template v-if="column.dataIndex === 'longitude'">
-            <span><aim-outlined /> {{ text }}<a-divider type="vertical" />{{ record.latitude}}</span>
-          </template>
-           <template v-if="column.dataIndex === 'id'">
-            <a>{{ text }}</a>
+            <a><aim-outlined /> {{ text }}<a-divider type="vertical" />{{ record.latitude}}</a>
           </template>
           <template v-else-if="column.key === 'action'">
           <span>
@@ -86,10 +83,10 @@ const columns = [{
   key: 'id',
   width: 100
 }, {
-  title: '经纬度',
-  dataIndex: 'longitude',
-  key: 'longitude',
-  ellipsis: false,
+  title: '名称',
+  dataIndex: 'name',
+  key: 'name',
+  ellipsis: true,
 },
  {
   title: '父级',
@@ -98,16 +95,16 @@ const columns = [{
   ellipsis: true,
 },
  {
-  title: '名称',
-  dataIndex: 'name',
-  key: 'name',
-  ellipsis: true,
-},
- {
   title: '简称',
   dataIndex: 'shortname',
   key: 'shortname',
   ellipsis: true,
+},
+{
+  title: '经纬度',
+  dataIndex: 'longitude',
+  key: 'longitude',
+  ellipsis: false,
 },
  {
   title: '排序',
