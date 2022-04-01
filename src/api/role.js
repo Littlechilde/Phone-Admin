@@ -1,4 +1,8 @@
 import request from '@/utils/request';
+import axios from 'axios';
+//取消请求
+let CancelToken = axios.CancelToken;
+window.cancelXHR = null; //window.cancle = {}如果一个项目中有多个接口需要取消上次请求
 
 const roleApi={
   getRole:'/int-admin/sys/role/list',
@@ -25,10 +29,13 @@ export function roleList(data) {
   })
 };
 //角色信息
-export function getRoleInfo(roleId) {
+export function getRoleInfo(roleId,) {
   return request({
     url:`${roleApi.roleInfo}/${roleId}`,
     method: 'GET',
+    cancelToken:new CancelToken(function executor(c) { 
+      window.cancelXHR = c;//window.cancle.resourceTable = c;
+    })
   })
 };
 //删除角色

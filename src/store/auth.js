@@ -24,6 +24,7 @@ const actions = {
       layout.children = [...authRoutes];
       constantRoutes.forEach((r) => router.addRoute(r));
       commit('GENERATE_ROUTES', asyncRoutesApi);
+      commit('USER_ROLES',auth);
       resolve();
     })
   }
@@ -32,8 +33,10 @@ const actions = {
 const mutations = {
   async GENERATE_ROUTES(state, authRoutes) {
     state.menuList = authRoutes;
-    // state.auth = auth;
   },
+  async USER_ROLES(state, auth){
+    state.auth = auth;
+  }
   /**面包屑、记住aside栏点击事件 key，跟随menulist*/
   /*async ASIDE_KEY(state,key){
     state.selectedKeys=[key];

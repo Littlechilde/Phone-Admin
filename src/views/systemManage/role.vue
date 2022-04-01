@@ -5,7 +5,7 @@
       <a-col :span="6">
         <a-space :size="16" align="center">
           <a-button type="primary" @click="showModal" :loading="loading">新增</a-button>
-          <a-button type="primary" danger>批量删除</a-button>
+          <a-button type="primary" @click="cleanAll" danger>批量删除</a-button>
         </a-space>
       </a-col>
     </a-row>
@@ -70,6 +70,7 @@
           <main class="listBox">
             <h5>菜单权限</h5>
             <a-tree
+              v-if ="treeData.length"
               v-model:expandedKeys="expandedKeys"
               v-model:selectedKeys="selectedKeys"
               v-model:checkedKeys="formState.menuIdList"
@@ -87,11 +88,13 @@
                 <template v-else>{{ title }}</template>
               </template>
             </a-tree>
+            <a-empty v-else :image="simpleImage" />
           </main>
           <a-divider type="vertical" style="height: auto;" dashed />
           <aside class="listBox">
              <h5>部门权限</h5>
               <a-tree
+              v-if ="deptList.length"
               v-model:expandedKeys="expandedKeysDepths"
               v-model:selectedKeys="selectedKeysDepths"
               v-model:checkedKeys="formState.deptIdList"
@@ -108,6 +111,7 @@
                 <span style="color: #FA541C">{{ name }}</span>
               </template>
             </a-tree>
+            <a-empty v-else :image="simpleImage" />
           </aside>
         </div>
       </a-form>
@@ -116,9 +120,9 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs,onMounted,watch } from 'vue';
+import { defineComponent, ref, reactive, toRefs,onMounted,watch,computed } from 'vue';
 import { DownOutlined,FormOutlined,DeleteOutlined  } from '@ant-design/icons-vue';
-import { message } from 'ant-design-vue';
+import { message,Empty } from 'ant-design-vue';
 import {formatTree} from '@/utils/formatTree';
 
 // import {getRoleType} from '@/api/api';
@@ -180,7 +184,6 @@ export default defineComponent({
     const selectedKeys = ref([]);
     const expandedKeysDepths = ref([]);
     const selectedKeysDepths = ref([]);
-
     const state = reactive({
       selectedRowKeys: [],
       title:'新增角色',
@@ -244,13 +247,22 @@ export default defineComponent({
       });
       console.log(text)
       const {roleId}=text;
-      const {data} = await getRoleInfo(roleId);
-      content.value = 'Loaded!';
-      for(let i in formState){
-        if(i =='deptName') formState[i] = data[i] ? data[i] : text[i];
-        else formState[i] = data[i];
-      };
-      visible.value = true;
+      // 取消上一次请求
+      window.cancelXHR && window.cancelXHR();
+      try{
+        const {data} = await getRoleInfo(roleId);
+        content.value = 'Loaded!';
+        for(let i in formState){
+          if(i =='deptName') formState[i] = data[i] ? data[i] : text[i];
+          else formState[i] = data[i];
+        };
+        visible.value = true;
+      }catch(err){
+        console.log(err)
+      }
+    }
+    const cleanAll= async ()=> {
+       window.cancelXHR && window.cancelXHR();
     }
     const onFinish = values => {
       console.log('Success:', values);
@@ -292,7 +304,7 @@ export default defineComponent({
         const {code} = await roleDelete({roleIds:text.roleId});
         if(!code){
           message.success('删除成功');
-          await queryList();
+          queryList();
         }
     };
     const cancelDel = e => {
@@ -348,6 +360,7 @@ export default defineComponent({
       selectedKeys,
       expandedKeysDepths,
       selectedKeysDepths,
+      simpleImage: Empty.PRESENTED_IMAGE_SIMPLE,
       onFinish,
       selectTree,
       handleChange,
@@ -356,6 +369,7 @@ export default defineComponent({
       showModal,
       handleOk,
       cancel,
+      cleanAll,
       confirmDel,
       cancelDel,
       edit,

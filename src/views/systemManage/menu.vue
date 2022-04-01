@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { defineComponent, ref, reactive, toRefs,onMounted,} from 'vue';
+import { defineComponent, ref, reactive, toRefs,onMounted,computed } from 'vue';
 import { DownOutlined,LinkOutlined,FormOutlined,DeleteOutlined  } from '@ant-design/icons-vue';
 import IconFont from "@/assets/iconFont/icon";
 import { message } from 'ant-design-vue';
@@ -199,6 +199,7 @@ export default defineComponent({
       loading:true,
       disabled:false
     });
+    const auth = computed(()=> store.state.auth.auth);
     const formState = reactive({
       "children":[],
     	"component": "",
@@ -227,10 +228,10 @@ export default defineComponent({
       visible.value = true;
       state.disabled = false;
       for(let i in formState){
-        if(i == 'parentId'){
+        if(i == 'parentId' || i == 'type' || i == 'orderNum' || i == 'menuId'){
           formState[i] = 0
-        }else if(i == 'type'){
-          formState[i] = 0
+        }else if(i == 'children' || i == 'list'){
+          formState[i] = []
         }else if(i == 'hidden'){
           formState[i] = false;
         }else{
@@ -263,19 +264,16 @@ export default defineComponent({
       confirmLoading.value = true;
       if(state.title=='新增菜单'){
         const {code} = await saveMenu(formState);
-        if(!code){
-          confirmLoading.value = false;
-          visible.value = false;
-        }else{return false}
+        if(code) {return false}
       }else{
         //修改
         const {code} = await updateMenu(formState);
-        if(!code)
-        visible.value = false;
-        confirmLoading.value = false;
+        if(code) {return false}       
       }
-      await queryList();
+      visible.value = false;
+      confirmLoading.value = false;
       message.success('Success');
+      await queryList();
     };
     //表单取消
     const cancel=() => {
@@ -288,8 +286,8 @@ export default defineComponent({
       const menuId = text.menuId;
       const {code} = await deleteMenu({menuId});
       if(!code){
-        await queryList();
         message.success('success');
+        queryList();
       }
     };
     const cancelDel = e => {
@@ -306,9 +304,10 @@ export default defineComponent({
       }
       formState.type =value;
     }
-    const selectTree = value => {
+    const selectTree = (value,[label]) => {
       console.log(`selected ${value}`);
       formState.parentId = value;
+      formState.parentName = label;
     };
     const handleFocus = () => {
       console.log('focus');

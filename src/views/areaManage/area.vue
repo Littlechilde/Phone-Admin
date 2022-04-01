@@ -224,8 +224,8 @@ export default defineComponent({
       console.log(text);
       const {code} = await deleteArea(text.id);
       if(code){return false}
-      await queryList();
       message.success('删除成功');
+      queryList();
     };
     const cancelDel = e => {
       console.log(e);
