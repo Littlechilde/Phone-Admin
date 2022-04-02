@@ -15,6 +15,7 @@ const actions = {
     const {data}= await navMenu();
     let asyncRoutesApi = roleMenu(data);
     asyncRoutesApi = filterAsyncRouter(asyncRoutesApi);
+    asyncRoutesApi.shift();//删除菜单干扰项
     console.log(asyncRoutesApi);
     return new Promise((resolve, reject) => {
       const layout = constantRoutes.find((item) => item.path === '/');

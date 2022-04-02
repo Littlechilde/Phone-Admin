@@ -240,7 +240,7 @@ export default defineComponent({
       }
     };
     const edit =async (text) => {
-      state.title = '编辑类型';
+      state.title = '编辑角色';
       content.value ='Loading...';
       message.loading({
         content: () => content.value,
@@ -253,8 +253,12 @@ export default defineComponent({
         const {data} = await getRoleInfo(roleId);
         content.value = 'Loaded!';
         for(let i in formState){
-          if(i =='deptName') formState[i] = data[i] ? data[i] : text[i];
-          else formState[i] = data[i];
+          if(i =='deptName') {formState[i] = data[i] ? data[i] : text[i];}
+          else if(i == 'menuIdList'){
+            //筛选出menuIdList大于31的数据
+            formState[i] = data[i].filter(item => item > 31);
+          }
+          else {formState[i] = data[i];}
         };
         visible.value = true;
       }catch(err){
@@ -333,7 +337,9 @@ export default defineComponent({
     /**查询Menu列表 */
     async function queryMenu(){
       const res = await menuList();
-      state.treeData = formatTree(res,'menuId','parentId','children',0);
+      const treeData = formatTree(res,'menuId','parentId','children',0);
+      treeData.shift(); //删除后台数据干扰项
+      state.treeData = treeData;
       console.log(state.treeData)
     }
     /**部门 列表*/
