@@ -256,7 +256,7 @@ export default defineComponent({
             const {code} = await deleteMore(ids);
             if(code){return false};
             message.success('删除成功');
-            await queryList();
+            queryList();
           } catch {
             return console.log('Oops errors!');
           }
