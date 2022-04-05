@@ -242,14 +242,16 @@ export default defineComponent({
     const edit =async (text) => {
       state.title = '编辑角色';
       content.value ='Loading...';
-      message.loading({
-        content: () => content.value,
-      });
       console.log(text)
       const {roleId}=text;
       // 取消上一次请求
+      message.destroy();
       window.cancelXHR && window.cancelXHR();
+      //发起新的请求
       try{
+        message.loading({
+          content: () => content.value,
+        });
         const {data} = await getRoleInfo(roleId);
         content.value = 'Loaded!';
         for(let i in formState){

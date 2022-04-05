@@ -13,6 +13,8 @@ vite-plugin-mock
 less支持
 
 - 菜单权限、按钮权限；
+- 取消请求；
+- 封装防抖；
 layout布局;
 
 语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html
