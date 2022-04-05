@@ -138,8 +138,18 @@ export default defineComponent({
       state.selectedRowKeys = selectedRowKeys;
       state.selectedRows=selectedRows;
     };
-    //批量删除
-    const cleanAll=()=>{
+    //防抖
+    function debounce(fn, delay = 200) {
+      let timer =null;
+      return function(...args) {
+        if (timer) clearTimeout(timer);
+        timer = setTimeout(() => {
+          fn(args);
+        }, delay);
+      };
+    };
+    //删除批量逻辑
+    const deleteChecked = ()=>{      
       if(!state.selectedRowKeys.length){
         message.error('请勾选需要批量删除的列表！')
       }else{
@@ -159,6 +169,7 @@ export default defineComponent({
               const result = state.dataOriginal.filter(item => keys.every(subItem => subItem.key !== item.key));//差集
               state.dataOriginal = result;
               state.data = formatTree(result,'menuId','parentId','children',0);
+              state.selectedRowKeys = [];
               setTimeout(()=>{
                 message.success('删除成功');
                 state.spinning =false;
@@ -171,10 +182,12 @@ export default defineComponent({
         },
         onCancel() {
           console.log('Cancel');
-        },
-      });
+        }});
       }
     };
+    const clean = debounce(deleteChecked,500);
+    //批量删除事件,调用防抖函数
+    const cleanAll=()=>clean();
     const showModal = ({child}) => {
       if(child) state.title = '新增子级';
       else state.title = '新增同级';
