@@ -203,13 +203,13 @@ export default defineComponent({
       }else{
         //修改
         const {code} = await editList(formState);
-        for (const i in formState){
+        if(code){return false};
+      };
+      for (const i in formState){
           if(i == "deptName")
             formState[i] = ''
           else formState[i] = 0
-        }
-        if(code){return false}
-      }
+      };
       visible.value = false;
       confirmLoading.value = false;
       message.success('Success');
