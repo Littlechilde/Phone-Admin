@@ -215,11 +215,6 @@ export default defineComponent({
         const {code} = await deviceUpdate(formState);
         if(code){return false}
       };
-      for (const i in formState){
-          if(i == "id" || i == "userId")
-            formState[i] = 0;
-          else formState[i] = '';
-        }
       visible.value = false;
       confirmLoading.value = false;
       message.success('Success');
@@ -230,6 +225,11 @@ export default defineComponent({
       console.log('Cancelled')
       confirmLoading.value = false;
       resetForm();
+      for (const i in formState){
+      if(i == "id" || i == "userId")
+        formState[i] = 0;
+      else formState[i] = '';
+      };
     }
     //删除
     const confirmDel =async text => {

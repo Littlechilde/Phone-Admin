@@ -205,11 +205,6 @@ export default defineComponent({
         const {code} = await editList(formState);
         if(code){return false};
       };
-      for (const i in formState){
-          if(i == "deptName")
-            formState[i] = ''
-          else formState[i] = 0
-      };
       visible.value = false;
       confirmLoading.value = false;
       message.success('Success');
@@ -220,6 +215,11 @@ export default defineComponent({
       console.log('Cancelled')
       confirmLoading.value = false;
       resetForm();
+      for (const i in formState){
+        if(i == "deptName")
+          formState[i] = ''
+        else formState[i] = 0
+      };
     }
     //删除
     const confirmDel =async text => {

@@ -202,11 +202,6 @@ export default defineComponent({
       }else{
         //修改
         const {code} = await areaUpdate(formState);
-        for (const i in formState){
-          if(i == "level" || i =='id' || i =='sort')
-            formState[i] = 0
-          else formState[i] = ""
-        }
         if(code){return false}
       }
       visible.value = false;
@@ -215,10 +210,15 @@ export default defineComponent({
       await queryList();
     };
     //表单取消
-    const cancel=() => {
+    const cancel= async () => {
       console.log('Cancelled')
       confirmLoading.value = false;
       resetForm();
+      for (const i in formState){
+        if(i == "level" || i =='id' || i =='sort')
+          formState[i] = 0
+        else formState[i] = ""
+      };
     }
     const confirmDel =async text => {
       console.log(text);
