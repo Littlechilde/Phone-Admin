@@ -68,7 +68,7 @@ import { DownOutlined,AimOutlined,DeleteOutlined,FormOutlined,ExclamationCircleO
 import { message,Modal } from 'ant-design-vue';
 
 import {getAreaType} from '@/api/api';
-import {partList,getInfo,areaUpdate,areaSave,deleteArea,deleteMore} from '@/api/area';
+import {areaList,getInfo,areaUpdate,areaSave,deleteArea,deleteMore} from '@/api/area';
 const formItemLayout = {
     labelCol: {
       span: 6,
@@ -104,6 +104,7 @@ const columns = [{
   title: '经纬度',
   dataIndex: 'longitude',
   key: 'longitude',
+  width: 300,
   ellipsis: false,
 },
  {
@@ -276,7 +277,7 @@ export default defineComponent({
     async function queryList(){
       if(!state.spinning)
       state.spinning = true;
-      const {data:{data,pageNum,pageSize,recordCounts}} = await partList(formState,state.headers);
+      const {data:{data,pageNum,pageSize,recordCounts}} = await areaList(formState,state.headers);
       state.headers.pageNum = pageNum;
       state.headers.pageSize = pageSize;
       state.recordCounts=recordCounts;

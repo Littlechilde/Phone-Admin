@@ -10,7 +10,7 @@ const areaApi={
 }
 
 //获取地区列表
-export function partList(params,headers) {
+export function areaList(params,headers) {
   return request({
     url:areaApi.getList,
     method: 'POST',

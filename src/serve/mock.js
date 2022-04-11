@@ -12,6 +12,7 @@ const systemApi = {
   areaType:baseURL + '/areaType',
   userList:baseURL + '/userList',
   payList:baseURL + '/payList',
+  getDetail:baseURL + '/getDetail',
 };
 
 // /* login */Mock.mock(rurl?, rtype?, template|function(options))
@@ -246,6 +247,148 @@ Mock.mock(
         callType: '市话',
         describe: "0.2元/分钟",
       }]
+    }
+  }
+);
+
+Mock.mock(
+  systemApi.getDetail,
+  'get',
+  (options) => {
+    return {
+      code: 0,
+      data: [
+        {
+        id: '1',
+        mainNumber:'933132008',
+        resolveNumber:'933133308',
+        callTime: 17,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '2',
+        mainNumber:'933132008',
+        resolveNumber:'933133308',
+        callTime: 26,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '3',
+        mainNumber:'933492023',
+        resolveNumber:'933132295',
+        callTime: 140,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '4',
+        mainNumber:'933952667',
+        resolveNumber:'933952653',
+        callTime: 30,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '5',
+        mainNumber:'933133214',
+        resolveNumber:'018874727059',
+        callTime: 25,
+        callType: '市内通话',
+        pay: "0.2",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '6',
+        mainNumber:'933952116',
+        resolveNumber:'933952192',
+        callTime: 49,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '7',
+        mainNumber:'933413145',
+        resolveNumber:'933418386',
+        callTime: 27,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '8',
+        mainNumber:'933442860',
+        resolveNumber:'018273308811',
+        callTime: 192,
+        callType: '市内通话',
+        pay: "0.3",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '9',
+        mainNumber:'933447856',
+        resolveNumber:'015773300052',
+        callTime: 23,
+        callType: '市内通话',
+        pay: "0.2",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '10',
+        mainNumber:'933132100',
+        resolveNumber:'933132057',
+        callTime: 22,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '11',
+        mainNumber:'933442860',
+        resolveNumber:'018273308811',
+        callTime: 192,
+        callType: '市内通话',
+        pay: "0.3",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '12',
+        mainNumber:'933837863',
+        resolveNumber:'013875401870',
+        callTime: 19,
+        callType: '市内通话',
+        pay: "0.2",
+        area:'',
+        payMark:''
+      },
+      {
+        id: '13',
+        mainNumber:'933133445',
+        resolveNumber:'933133602',
+        callTime: 266,
+        callType: '集团通话',
+        pay: "0",
+        area:'',
+        payMark:''
+      },
+    ]
     }
   }
 )

@@ -12,6 +12,7 @@ export const systemApi ={
     areaType:'/areaType',
     userList:'/userList',
     payList:'/payList',
+    getDetail:'/getDetail',
 };
 //登录
 export function Login(data) {
@@ -90,3 +91,10 @@ export function getPayType(data) {
     params: data
   })
 };
+export function getDefault(data) {
+  return request({
+    url:systemApi.getDetail,
+    method: 'get',
+    params: data
+  })
+}
