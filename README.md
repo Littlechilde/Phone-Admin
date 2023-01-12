@@ -17,8 +17,6 @@ less支持
 - 封装防抖；
 layout布局;
 
-语法和非语法糖写法：http://dljz.nicethemes.cn/news/show-190700.html
-
 目下载和运行
 ----
 
